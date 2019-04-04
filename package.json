@@ -1,0 +1,11 @@
+{
+    "name": "db",
+    "version": "1.0.0",
+    "description": "git webhook",
+    "main": "app.js",
+    "dependencies": {
+        "sequelize": "^5.2.11",
+        "mysql2": "^1.6.5",
+        "mysql": "^2.16.0"
+    }
+}
