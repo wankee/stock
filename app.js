@@ -1,30 +1,42 @@
-const model = require('./model');
+const Koa = require('koa');
 
-let
-    Pet = model.Pet;
-// User = model.User;
-var now = Date.now();
+const bodyParser = require('koa-bodyparser');
 
-(async () => {
-    // var user = await User.create({
-    //     name: 'John',
-    //     gender: false,
-    //     email: 'john-' + Date.now() + '@garfield.pet',
-    //     passwd: 'hahaha'
-    // });
-    // console.log('created: ' + JSON.stringify(user));
-    var cat = await Pet.create({
-        // id: 'g-' + now,
-        name: 'Gaffey',
-        gender: false,
-        birth: '2007-07-07',
-    });
-    console.log('created: ' + JSON.stringify(cat));
-    var dog = await Pet.create({
-        // id: 'g-' + now,
-        name: 'Odie',
-        gender: false,
-        birth: '2008-08-08',
-    });
-    console.log('created: ' + JSON.stringify(dog));
-})();
+const controller = require('./controller');
+
+const templating = require('./templating');
+
+const rest = require('./rest');
+
+const app = new Koa();
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+// log request URL:
+app.use(async (ctx, next) => {
+    console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
+    await next();
+});
+
+if (!isProduction) {
+    // static file support:
+    let staticFiles = require('./static-files');
+    app.use(staticFiles('/static/', __dirname + '/static'));
+}
+// parse request body:
+app.use(bodyParser());
+
+// add nunjucks as view:
+app.use(templating('views', {
+    noCache: !isProduction,
+    watch: !isProduction
+}));
+
+// bind .rest() for ctx:
+app.use(rest.restify());
+
+// add controllers:
+app.use(controller());
+
+app.listen(3000);
+console.log('app started at port 3000...');

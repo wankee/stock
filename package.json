@@ -1,11 +1,25 @@
 {
-    "name": "db",
+    "name": "stock",
     "version": "1.0.0",
-    "description": "git webhook",
+    "description": "stock statistics",
     "main": "app.js",
+    "scripts": {
+        "start": "node --use_strict app.js"
+    },
+    "keywords": [
+        "koa",
+        "rest",
+        "api"
+    ],
     "dependencies": {
         "sequelize": "^5.2.11",
         "mysql2": "^1.6.5",
+        "koa": "^2.7.0",
+        "koa-bodyparser": "^4.2.1",
+        "koa-router": "^7.4.0",
+        "nunjucks": "^3.2.0",
+        "mime": "^2.4.2",
+        "mz": "^2.7.0",
         "mysql": "^2.16.0"
     }
 }
