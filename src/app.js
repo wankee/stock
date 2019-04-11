@@ -21,13 +21,13 @@ app.use(async (ctx, next) => {
 if (!isProduction) {
     // static file support:
     let staticFiles = require('./static-files');
-    app.use(staticFiles('/static/', __dirname + '/static'));
+    app.use(staticFiles('/static/', './static'));
 }
 // parse request body:
 app.use(bodyParser());
 
 // add nunjucks as view:
-app.use(templating('views', {
+app.use(templating('./views', {
     noCache: !isProduction,
     watch: !isProduction
 }));

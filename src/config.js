@@ -1,7 +1,7 @@
 // config files:
-const defaultConfig = './config-default.js';
-const overrideConfig = './config-override.js';
-const testConfig = './config-test.js';
+const defaultConfig = `${__dirname}/config-default.js`;
+const overrideConfig = `${__dirname}/config-override.js`;
+const testConfig = `${__dirname}/config-test.js`;
 
 const fs = require('fs');
 

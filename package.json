@@ -4,7 +4,7 @@
     "description": "stock statistics",
     "main": "app.js",
     "scripts": {
-        "start": "node --use_strict app.js"
+        "start": "tsc && supervisor -w build --use_strict build/app.js"
     },
     "keywords": [
         "koa",
@@ -21,5 +21,11 @@
         "mime": "^2.4.2",
         "mz": "^2.7.0",
         "mysql": "^2.16.0"
+    },
+    "devDependencies": {
+        "eslint": "^5.16.0",
+        "gulp": "^4.0.0",
+        "gulp-typescript": "^5.0.1",
+        "typescript": "^3.4.3"
     }
 }
