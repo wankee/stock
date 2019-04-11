@@ -1,4 +1,4 @@
-const db = require('../db');
+import db = require('../db');
 module.exports = db.defineModel('trade', {
     code: db.STRING(6),
     name: db.STRING(10),

@@ -1,15 +1,16 @@
 const model = require('./model.js');
 
-// (async () => {
-// modeljs.sync().then(() => {
-//     console.log('init db ok.');
-// });
-model.sync(() => {
-    console.log('==>init db ok.');
-    initDb();
-}, (err) => {
-    console.log('=====error=====');
-});
+// model.sync();
+init();
+
+function init() {
+    model.sync(() => {
+        console.log('==>init db ok.');
+        initDb();
+    }, (err) => {
+        console.log('=====error=====');
+    });
+}
 
 // process.exit(0);
 function initDb() {

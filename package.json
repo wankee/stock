@@ -4,7 +4,8 @@
     "description": "stock statistics",
     "main": "app.js",
     "scripts": {
-        "start": "tsc && supervisor -w build --use_strict build/app.js"
+        "start": "tsc && supervisor -w build --use_strict build/app.js",
+        "init": "tsc && node --use_strict build/init-db.js"
     },
     "keywords": [
         "koa",
