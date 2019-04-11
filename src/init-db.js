@@ -6,7 +6,7 @@ init();
 function init() {
     model.sync(() => {
         console.log('==>init db ok.');
-        initDb();
+        // initDb();
     }, (err) => {
         console.log('=====error=====');
     });
