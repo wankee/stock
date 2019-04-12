@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
-        "noImplicitAny":false,
-        "noImplicitReturns":true,
-        "noFallthroughCasesInSwitch":true,
+        "noImplicitAny": false,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
         "outDir": "./build",
         "allowJs": true,
-        "target": "es5"
+        "target": "es6",
+        "module": "commonjs"
     },
     "include": [
         "./src/**/*"

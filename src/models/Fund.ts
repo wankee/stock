@@ -1,6 +1,10 @@
-import db = require('../db');
-export = db.defineModel('fund', {
-    date: db.DATEONLY,
-    amount: db.DECIMAL(12, 2),
-    type: db.STRING(6),
-});
+import { DataTypes, Model } from 'sequelize';
+import { sequelize } from '../db';
+
+export default class Fund extends Model { }
+
+Fund.init({
+    date: DataTypes.DATEONLY,
+    amount: DataTypes.DECIMAL(12, 2),
+    type: DataTypes.STRING(6),
+}, { sequelize, modelName: 'fund', freezeTableName: true })

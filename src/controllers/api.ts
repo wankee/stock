@@ -1,5 +1,5 @@
 import rest = require('../rest');
-import Trade = require('../models/Trade');
+import Trade from '../models/Trade';
 
 function getTrades() {
     return Trade.findAll();

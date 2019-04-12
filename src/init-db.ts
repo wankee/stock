@@ -1,9 +1,8 @@
-import parse = require('csv-parse')
-import stringify = require('csv-stringify')
-import fs = require('fs')
-import Fund = require('./models/Fund')
-import Trade = require('./models/Trade')
-
+import parse = require('csv-parse');
+import stringify = require('csv-stringify');
+import * as fs from 'fs';
+import Fund from './models/Fund';
+import Trade from './models/Trade';
 import db = require('./db');
 
 db.sync(() => {
