@@ -5,8 +5,7 @@
     "main": "app.js",
     "scripts": {
         "start": "tsc && supervisor -w build --use_strict build/app.js",
-        "init": "tsc && node --use_strict build/init-db.js",
-        "csv": "tsc && node --use_strict build/import-data.js"
+        "init": "tsc && node --use_strict build/init-db.js"
     },
     "keywords": [
         "koa",

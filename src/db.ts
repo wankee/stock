@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
+import { Sequelize, DataTypes } from 'sequelize';
 
 const uuidv4 = require('uuid/v4');
 
-const config = require('./config');
+import config = require('./config');
 
 // console.log('init sequelize...');
 function generateId() {
@@ -12,12 +12,8 @@ function generateId() {
 var sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     dialect: config.dialect,
-    define: {
-        charset: 'utf8',
-        dialectOptions: {
-            collate: 'utf8_general_ci'
-        },
-    },
+    define: { charset: 'utf8' },
+    dialectOptions: { collate: 'utf8_general_ci' },
     pool: {
         max: 5,
         min: 0,
@@ -25,7 +21,7 @@ var sequelize = new Sequelize(config.database, config.username, config.password,
     }
 });
 
-const ID_TYPE = Sequelize.STRING(50);
+const ID_TYPE = DataTypes.STRING(50);
 
 function printModel(name, attrs) {
     console.log('model defined for table: ' + name + '\n' + JSON.stringify(attrs, function (k, v) {
@@ -52,7 +48,7 @@ function printModel(name, attrs) {
     }, '  '));
 }
 function defineModel(name, attributes) {
-    var attrs = {};
+    var attrs: any = {};
     for (let key in attributes) {
         let value = attributes[key];
         if (typeof value === 'object' && value['type']) {
@@ -70,11 +66,11 @@ function defineModel(name, attributes) {
         primaryKey: true
     };
     attrs.createdAt = {
-        type: Sequelize.BIGINT,
+        type: DataTypes.BIGINT,
         allowNull: false
     };
     attrs.updatedAt = {
-        type: Sequelize.BIGINT,
+        type: DataTypes.BIGINT,
         allowNull: false
     };
     // printModel(name,attrs);
@@ -82,7 +78,7 @@ function defineModel(name, attributes) {
         tableName: name,
         timestamps: false,
         hooks: {
-            beforeValidate: function (obj) {
+            beforeValidate: function (obj:any) {
                 let now = Date.now();
                 if (obj.isNewRecord) {
                     console.log('will create entity...' + obj);
@@ -100,19 +96,20 @@ function defineModel(name, attributes) {
     });
 }
 
+
 const TYPES = ['STRING', 'INTEGER', 'BIGINT', 'TEXT', 'DOUBLE', 'DATEONLY', 'BOOLEAN', 'DECIMAL'];
 
-var exp = {
+var exp: any = {
     defineModel: defineModel,
-    sync: () => {
-        // sync(null, null);
-        // only allow create ddl in non-production environment:
-        if (process.env.NODE_ENV !== 'production') {
-            sequelize.sync({ force: true });
-        } else {
-            throw new Error('Cannot sync() when NODE_ENV is set to \'production\'.');
-        }
-    },
+    // sync: () => {
+    //     // sync(null, null);
+    //     // only allow create ddl in non-production environment:
+    //     if (process.env.NODE_ENV !== 'production') {
+    //         sequelize.sync({ force: true });
+    //     } else {
+    //         throw new Error('Cannot sync() when NODE_ENV is set to \'production\'.');
+    //     }
+    // },
     sync: (success, error) => {
         // only allow create ddl in non-production environment:
         if (process.env.NODE_ENV !== 'production') {
@@ -130,4 +127,6 @@ for (let type of TYPES) {
 exp.ID = ID_TYPE;
 exp.generateId = generateId;
 
-module.exports = exp;
+// export class db extends Sequelize{}
+// module.exports = exp;
+export = exp;

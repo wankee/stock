@@ -1,5 +1,5 @@
-const APIError = require('../rest').APIError;
-const Trade = require('../model').Trade;
+import rest = require('../rest');
+import Trade = require('../models/Trade');
 
 function getTrades() {
     return Trade.findAll();
@@ -47,7 +47,7 @@ module.exports = {
                 id: ctx.params.id
             });
         } else {
-            throw new APIError('trade:not_found', 'trade not found by id.');
+            throw new rest.APIError('trade:not_found', 'trade not found by id.');
         }
     }
 };
