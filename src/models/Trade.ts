@@ -9,4 +9,3 @@ Trade.init({
     price: DataTypes.DECIMAL(12, 2),
     shares: DataTypes.INTEGER,
 }, { sequelize, modelName: 'trade', freezeTableName: true })
-

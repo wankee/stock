@@ -8,7 +8,7 @@ import db = require('./db');
 db.sync(() => {
     console.log('==>init db ok.');
     initFund();
-    initTrade();
+    // initTrade();
 }, (err) => {
     console.log('=====error=====');
 });
@@ -27,7 +27,7 @@ function getObjectClass(obj) {
 function initFund() {
     // new Fund().create();
     fs.createReadStream(__dirname + '/../fund_history.csv')
-        .pipe(parse({ delimiter: ',' }, function (err, data) {
+        .pipe(parse({ delimiter: ',' }, async function (err, data) {
             console.log(getObjectClass(data));
             // var rows: any = [];
             // console.log(data);
@@ -38,17 +38,18 @@ function initFund() {
                 //     type: row[2],
                 // })
                 console.log("====" + row[0]); // 1, "string", false
-                Fund.create({
+                await Fund.create({
                     date: row[0],
                     amount: row[1],
                     type: row[2],
                 });
-                console.log("==============");
+                console.log("=====after create=========");
             }
-            // Fund.bulkCreate(rows).then(() => {
+            // Fund.bulkCreate(rows)
+            // .then(() => {
             //     return Fund.findAll();
             // }).then(users => {
-            //     console.log(users);
+            //     // console.log(users);
             // });
             // console.log("====");
             // Fund.create({

@@ -9,7 +9,10 @@ function generateId() {
 export var sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     dialect: config.dialect,
-    define: { charset: 'utf8' },
+    define: {
+        charset: 'utf8',
+        collate: 'utf8_general_ci'
+    },
     pool: {
         max: 5,
         min: 0,
