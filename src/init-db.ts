@@ -1,6 +1,7 @@
 import parse = require('csv-parse');
 import stringify = require('csv-stringify');
 import * as fs from 'fs';
+import Utils from './utils';
 import Fund from './models/Fund';
 import Trade from './models/Trade';
 import db = require('./db');
@@ -13,22 +14,11 @@ db.sync(() => {
     console.log('=====error=====');
 });
 
-function getObjectClass(obj) {
-    if (obj && obj.constructor && obj.constructor.toString) {
-        var arr = obj.constructor.toString().match(/function\s*(\w+)/);
-        if (arr && arr.length == 2) {
-            return arr[1];
-        }
-    }
-
-    return undefined;
-}
-
 function initFund() {
     // new Fund().create();
     fs.createReadStream(__dirname + '/../fund_history.csv')
         .pipe(parse({ delimiter: ',' }, async function (err, data) {
-            console.log(getObjectClass(data));
+            console.log(Utils.getObjectClass(data));
             // var rows: any = [];
             // console.log(data);
             for (let row of data) {

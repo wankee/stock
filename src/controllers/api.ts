@@ -1,5 +1,13 @@
 import rest = require('../rest');
 import Trade from '../models/Trade';
+import Fund from '../models/Fund';
+import Utils from '../utils';
+function getFundHistory() {
+    return Fund.findAll({
+        attributes: ['date', 'amount'],
+        order: [['date', 'ASC']]
+    });
+}
 
 function getTrades() {
     return Trade.findAll();
@@ -28,6 +36,20 @@ function deleteTrade(id) {
 }
 
 module.exports = {
+    'GET /api/fund_history': async (ctx, next) => {
+        let fundHitory = await getFundHistory();
+        let res = new Array();
+        for (let row of fundHitory) {
+            res.push([
+                row.get('date'),
+                parseFloat(row.get('amount'))
+            ]);
+        }
+        ctx.rest(
+            res
+        );
+    },
+
     'GET /api/trades': async (ctx, next) => {
         ctx.rest({
             trades: await getTrades()

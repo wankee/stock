@@ -1,0 +1,147 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Highcharts Example</title>
+    <script src="/static/js/jquery.min.js"></script>
+    <!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <!-- <script src="/static/js/papaparse.min.js"></script> -->
+
+    <script>
+        $.getJSON(window.location.origin + '/api/fund_history', function (data) {
+            // console.log(data);
+
+            // $(function () {
+            // document.addEventListener('DOMContentLoaded', function () {
+            /**
+             * Use external CSV parser
+             * http://papaparse.com/
+             */
+            // var csv = Papa.parse(document.getElementById('data').innerHTML, {
+            //     complete: function (results) {
+            //         console.log(results.data);
+            //     }
+            // });
+            // Papa.parse((window.location.origin + "/static/data/fund.csv"), {
+            //     download: true,
+            //     header: false,
+            //     complete: function (results) {
+            //         console.log(results);
+
+
+            Highcharts.stockChart('container', {
+
+                rangeSelector: {
+                    selected: 1
+                },
+
+                title: {
+                    text: 'Fund History'
+                },
+
+                series: [{
+                    name: 'Current Fund',
+                    data: data,
+                    type: 'area',
+                    threshold: null,
+                    tooltip: {
+                        valueDecimals: 2
+                    },
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    }
+                }]
+            });
+        })
+            // });
+
+
+
+            //     $('#container').highcharts({
+            //         data: {
+            //             rows: results.data,
+            //             seriesMapping: [{
+            //                 // x: 0, // X values are pulled from column 0 by default
+            //                 // y: 1, // Y values are pulled from column 1 by default
+            //                 label: 2 // Labels are pulled from column 2 and picked up in the dataLabels.format below
+            //             }]
+            //         },
+            //         chart: {
+            //             type: 'column'
+            //         },
+            //         title: {
+            //             text: '日常运动'
+            //         },
+            //         xAxis: {
+            //             minTickInterval: 24 * 36e5,
+            //             dateTimeLabelFormats: {
+            //                 day: '%Y-%m-%d'
+            //             }
+            //         },
+            //         yAxis: {
+            //             title: {
+            //                 text: '里程数'
+            //             },
+            //             labels: {
+            //                 format: '{value} km'
+            //             }
+            //         },
+            //         legend: {
+            //             enabled: false
+            //         },
+            //         plotOptions: {
+            //             series: {
+            //                 dataLabels: {
+            //                     enabled: true,
+            //                     format: '{point.label}'
+            //                 },
+            //                 tooltip: {
+            //                     valueSuffix: ' km'
+            //                 }
+            //             }
+            //         }
+            //     });
+            // }
+            // });
+
+            // Papa.parse(fileInput.files[0], {
+            //     complete: function (results) {
+            //         console.log(results);
+            //     }
+            // });
+
+            // document.addEventListener('DOMContentLoaded', function () {
+
+
+
+
+
+        // });
+    </script>
+
+</head>
+
+<body>
+    <div id="container" style="width: 800px; height: 400px; margin: 0 auto"></div>
+    <!-- <div style="max-width: 800px; margin: 0 auto">
+        <pre id="data">时间,里程数,标签
+        2013-01-01,2.3,
+        2013-01-02,3.1,
+        2013-01-03,4.8,"最好成绩"
+        2013-01-04,1.3</pre>
+    </div> -->
+</body>
+
+</html>
