@@ -41,7 +41,7 @@ module.exports = {
         let res = new Array();
         for (let row of fundHitory) {
             res.push([
-                row.get('date'),
+                new Date(row.get('date')).getTime(),
                 parseFloat(row.get('amount'))
             ]);
         }
