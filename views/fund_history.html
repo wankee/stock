@@ -16,79 +16,88 @@
             var cash = new Array();
             var date = new Array();
             date[0] = new Date(data[0][0]);
-            cash[0]=0;
+            cash[0] = 0;
             console.log(date);
-            var now = new Date("2015-04-22");
+            var now = new Date("2019-04-22");
             console.log(now);
             console.log(now - date[0]);
-            var days=(now-date[0])/1000/3600/24;
+            var days = (now - date[0]) / 1000 / 3600 / 24;
             console.log(days);
+
+            var d1 = new Array();
+            var d2 = new Array();
+            d1[0] = [date[0].getTime(), cash[0]];
+            console.log(date[0].getTime());
+            d2[0] = [date[0].getTime(), cash[0] + 100];
             for (let i = 1; i < days; i++) {
                 date[i] = new Date(date[0]);
                 date[i].setDate(date[i].getDate() + i);
-                cash[i]=i;
+                cash[i] = i;
+                d1[i] = [date[i].getTime(), cash[i]];
+                d2[i] = [date[i].getTime(), cash[i] + 100];
+
                 // var m = d.getMonth() + 1;
                 // date[i] = new Date().setDate(date[0].getDate() + i);
                 // console.log(date[i]);
             }
-            console.log(date[10].getDate()-date[0].getDate());
-            var x = new Array([], [], []);
-            var d2 = new Array();
-            // var x = [[],[],[]];
-            for (let i = 0; i < data.length; i++) {
-                // let row=data[i];
-                // console.log(data[i]);
-                d2[i] = new Array();
-                d2[i][0] = data[i][0];
+            console.log(date[10].getDate() - date[0].getDate());
+            // var x = new Array([], [], []);
+            // var d2 = new Array();
+            // // var x = [[],[],[]];
+            // for (let i = 0; i < data.length; i++) {
+            //     // let row=data[i];
+            //     // console.log(data[i]);
+            //     d2[i] = new Array();
+            //     d2[i][0] = data[i][0];
 
-                // x[0] = new Array();
-                x[0][i] = data[i][0];
-                x[1][i] = data[i][1];
-                if (i == 0) {
-                    d2[i][1] = data[i][1];
-                    x[2][i] = data[i][1];
-                } else {
-                    d2[i][1] = d2[i - 1][1] + data[i][1];
-                    x[2][i] = data[i][1] + x[2][i - 1];
-                }
-            }
-            console.log(x);
-            var t1 = [x[0], x[1]];
-            // var t1 =
+            //     // x[0] = new Array();
+            //     x[0][i] = data[i][0];
+            //     x[1][i] = data[i][1];
+            //     if (i == 0) {
+            //         d2[i][1] = data[i][1];
+            //         x[2][i] = data[i][1];
+            //     } else {
+            //         d2[i][1] = d2[i - 1][1] + data[i][1];
+            //         x[2][i] = data[i][1] + x[2][i - 1];
+            //     }
+            // }
+            // console.log(x);
+            // var t1 = [x[0], x[1]];
+            // // var t1 =
+            // //     [
+            // //         [
+            // //         "2018-07-08",
+            // //             65.5
+            // //         ],
+            // //         [
+            // //             1492781400000,
+            // //             66.4
+            // //         ],
+            // //         [
+            // //             1493040600000,
+            // //             67.53
+            // //         ]];
+
+            // console.log(t1);
+            // var t2 = [x[0], x[2]];
+
+            // var t2 =
             //     [
             //         [
-            //         "2018-07-08",
-            //             65.5
+            //             "2018-07-08",
+            //             165.5
             //         ],
             //         [
             //             1492781400000,
-            //             66.4
+            //             166.4
             //         ],
             //         [
             //             1493040600000,
             //             67.53
             //         ]];
 
-            console.log(t1);
-            var t2 = [x[0], x[2]];
-
-            var t2 =
-                [
-                    [
-                        "2018-07-08",
-                        165.5
-                    ],
-                    [
-                        1492781400000,
-                        166.4
-                    ],
-                    [
-                        1493040600000,
-                        67.53
-                    ]];
-
-            console.log(data);
-            Highcharts.chart('container', {
+            // console.log(data);
+            Highcharts.stockChart('container', {
                 // chart: {
                 //     type: 'line'
                 // },
@@ -110,46 +119,70 @@
                     selected: 4
                 },
 
-                yAxis: {
-                    labels: {
-                        formatter: function () {
-                            return (this.value > 0 ? ' + ' : '') + this.value + '%';
-                        }
-                    },
-                    plotLines: [{
-                        value: 0,
-                        width: 2,
-                        color: 'silver'
-                    }]
-                },
+                // yAxis: {
+                //     labels: {
+                //         formatter: function () {
+                //             return (this.value > 0 ? ' + ' : '') + this.value + '%';
+                //         }
+                //     },
+                //     plotLines: [{
+                //         value: 0,
+                //         width: 2,
+                //         color: 'silver'
+                //     }]
+                // },
 
                 plotOptions: {
                     series: {
-                        compare: 'percent',
-                        showInNavigator: true
+                        dataGrouping: {
+                            dateTimeLabelFormats: {
+                                day: ['%Y-%m-%d'],
+                                week: ['%Y-%m-%d'],
+                                month: ['%Y-%m'],
+                                year: ['%Y']
+                            }
+                        }
                     }
                 },
 
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        day: '%Y<br/>%m-%d',
+                        week: '%Y<br/>%m-%d',
+                        month: '%Y-%m',
+                        year: '%Y'
+                    }
+                },
                 tooltip: {
-                    pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
+                    dateTimeLabelFormats: {
+                        day: '%Y-%m-%d',
+                        week: '%Y-%m-%d',
+                        month: '%Y-%m',
+                        year: '%Y'
+                    },
+                    // pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.change}%)<br/>',
                     valueDecimals: 2,
                     split: true
                 },
-                xAxis: {
-                    categories: date,
+                // xAxis: {
+                //     // categories: date,
 
 
-                    minTickInterval: 24 * 36e5,
-                    dateTimeLabelFormats: {
-                        day: '%Y-%m-%d'
-                    }
+                //     minTickInterval: 24 * 36e5,
+                //     dateTimeLabelFormats: {
+                //         day: '%Y-%m-%d'
+                //     }
 
-                },
+                // },
                 // data:data
                 series: [
                     {
                         name: "现金",
-                        data: cash
+                        data: d1
+                    }, {
+                        name: "test",
+                        data: d2
                     }]
             })
             // Highcharts.stockChart('container', {
