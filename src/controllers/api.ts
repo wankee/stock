@@ -4,7 +4,7 @@ import Fund from '../models/Fund';
 import Utils from '../utils';
 function getFundHistory() {
     return Fund.findAll({
-        attributes: ['date', 'amount'],
+        attributes: ['date', 'amount', 'type'],
         order: [['date', 'ASC']]
     });
 }
@@ -42,7 +42,8 @@ module.exports = {
         for (let row of fundHitory) {
             res.push([
                 new Date(row.get('date')).getTime(),
-                parseFloat(row.get('amount'))
+                parseFloat(row.get('amount')),
+                row.get('type')
             ]);
         }
         ctx.rest(
