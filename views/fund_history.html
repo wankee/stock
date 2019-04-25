@@ -58,21 +58,24 @@
             var search_index = 0;
 
             for (let i = 0; i < days; i++) {
-                if (i === 0) {
-                    cash[0] = 0;
-                } else {
+                if (i != 0) {
                     date[i] = new Date(date[i - 1]);
                     date[i].setDate(date[i - 1].getDate() + 1);
-                    let change = 0;
-                    var detail = [];
-                    // console.log(i + " search:" + search_index);
-                    if (search_index < data.length) {
-                        let ob = calucChangeInDay(data, date[i].getTime(), search_index);
-                        search_index = ob.index;
-                        change = ob.change;
-                        detail = ob.detail;
-                    }
+                }
 
+                let change = 0;
+                let detail = [];
+                // console.log(i + " search:" + search_index);
+                if (search_index < data.length) {
+                    let ob = calucChangeInDay(data, date[i].getTime(), search_index);
+                    search_index = ob.index;
+                    change = ob.change;
+                    detail = ob.detail;
+                }
+
+                if (i === 0) {
+                    cash[0] = change;
+                } else {
                     cash[i] = cash[i - 1] + change;
                 }
                 // console.log(i + " cash:" + cash[i]);
