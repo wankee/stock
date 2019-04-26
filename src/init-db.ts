@@ -1,5 +1,4 @@
 import parse = require('csv-parse');
-import stringify = require('csv-stringify');
 import * as fs from 'fs';
 import Utils from './utils';
 import Fund from './models/Fund';
@@ -9,7 +8,7 @@ import db = require('./db');
 db.sync(() => {
     console.log('==>init db ok.');
     initFund();
-    // initTrade();
+    initTradeFromCSV();
 }, (err) => {
     console.log('=====error=====');
 });
@@ -27,7 +26,7 @@ function initFund() {
                 //     amount: row[1],
                 //     type: row[2],
                 // })
-                console.log("====" + row[0]); // 1, "string", false
+                console.log("====" + row[0]);
                 await Fund.create({
                     date: row[0],
                     amount: row[1],
@@ -47,6 +46,34 @@ function initFund() {
             //     amount: data[1],
             //     type: data[2],
             // });
+        }))
+}
+function initTradeFromCSV() {
+    fs.createReadStream(__dirname + '/../trade_record.csv')
+        .pipe(parse({ delimiter: ',' }, async function (err, data) {
+            console.log(Utils.getObjectClass(data));
+            // console.log(data);
+            for (let row of data) {
+                // console.log(Utils.getObjectClass(row));
+                // console.log(row);
+                await Trade.create({
+                    date: row[0],
+                    code: row[1],
+                    name: row[2],
+                    price: row[3],
+                    shares: row[4],
+                    total_price: row[5],
+                    total_fee: row[6],
+                    commission: row[7],
+                    fees: row[8],
+                    stamp_duty: row[9],
+                    transfer_tax: row[10],
+                    dividend_tax: row[11],
+                    dividend: row[12],
+                    sum: row[13],
+                });
+                console.log("=====after create=========");
+            }
         }))
 }
 
