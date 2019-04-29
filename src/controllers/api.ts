@@ -10,7 +10,10 @@ function getFundHistory() {
 }
 
 function getTrades() {
-    return Trade.findAll();
+    return Trade.findAll({
+        attributes: ['date', 'code', 'name', 'price', 'shares'],
+        order: [['date', 'ASC']]
+    });
 }
 function getTrade(id) {
     return Trade.findAll({
@@ -35,20 +38,30 @@ function deleteTrade(id) {
     });
 }
 
+function parseFundHistory(fundHitory: any) {
+    let res = new Array();
+    for (let row of fundHitory) {
+        res.push([
+            new Date(row.date).getTime(),
+            parseFloat(row.amount),
+            row.type
+        ]);
+    }
+    return res;
+}
+
 module.exports = {
     'GET /api/fund_history': async (ctx, next) => {
-        let fundHitory = await getFundHistory();
-        let res = new Array();
-        for (let row of fundHitory) {
-            res.push([
-                new Date(row.get('date')).getTime(),
-                parseFloat(row.get('amount')),
-                row.get('type')
-            ]);
-        }
         ctx.rest(
-            res
+            parseFundHistory(await getFundHistory())
         );
+    },
+
+    'GET /api/trades_fund_history': async (ctx, next) => {
+        ctx.rest({
+            trades: await getTrades(),
+            fund: parseFundHistory(await getFundHistory())
+        });
     },
 
     'GET /api/trades': async (ctx, next) => {

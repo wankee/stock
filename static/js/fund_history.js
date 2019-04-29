@@ -2,19 +2,19 @@ function format(date) {
     return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 }
 
-function calucChangeInDay(data, timestamp, start) {
+function calcuChangeInDay(fund, timestamp, start) {
     let index = start,
         change = currency(0),
         detail = new Array();
 
-    for (let i = start; i < data.length; i++) {
+    for (let i = start; i < fund.length; i++) {
         // console.log(i + " " + timestamp + " " + data[i][0] + " ");
-        if (data[i][0] > timestamp) break;
-        if (data[i][0] === timestamp) {
+        if (fund[i][0] > timestamp) break;
+        if (fund[i][0] === timestamp) {
             // console.log(timestamp + " " + data[i][0] + " " + data[i][1]);
             index = i + 1;
-            change = change.add(data[i][1]);
-            detail.push(data[i]);
+            change = change.add(fund[i][1]);
+            detail.push(fund[i]);
             // console.log("change " + change);
         }
     }
@@ -25,24 +25,17 @@ function calucChangeInDay(data, timestamp, start) {
     }
 }
 
-$.getJSON(window.location.origin + '/api/fund_history', function (data) {
-    console.log(data);
-    var cash = new Array();
-    var date = new Array();
-    date[0] = new Date(data[0][0]);
+function parseFundHistory(fund) {
+    let cash = new Array();
+    let date = new Array();
+    date[0] = new Date(fund[0][0]);
     date[0].setDate(date[0].getDate());
-
     // console.log(date);
-    var now = new Date("2019-04-22");
-    // console.log(now);
-    // console.log(now - date[0]);
-    var days = (now - date[0]) / 1000 / 3600 / 24;
+    let now = new Date("2019-04-22");
+    let days = (now - date[0]) / 1000 / 3600 / 24;
     // console.log(days);
-
-    var d1 = new Array();
-    var d2 = new Array();
-    // console.log(d1);
-    var search_index = 0;
+    let res = new Array();
+    let search_index = 0;
 
     for (let i = 0; i < days; i++) {
         if (i != 0) {
@@ -53,8 +46,8 @@ $.getJSON(window.location.origin + '/api/fund_history', function (data) {
         let change = currency(0);
         let detail = [];
         // console.log(i + " search:" + search_index);
-        if (search_index < data.length) {
-            let ob = calucChangeInDay(data, date[i].getTime(), search_index);
+        if (search_index < fund.length) {
+            let ob = calcuChangeInDay(fund, date[i].getTime(), search_index);
             search_index = ob.index;
             change = ob.change;
             detail = ob.detail;
@@ -62,13 +55,108 @@ $.getJSON(window.location.origin + '/api/fund_history', function (data) {
 
         if (i === 0) {
             cash[0] = change;
-        } else {
+        }
+        else {
             cash[i] = cash[i - 1].add(change);
         }
         // console.log(i + " cash:" + cash[i]);
-        d1[i] = { x: date[i].getTime(), y: cash[i].value, detail: detail };
-        d2[i] = [date[i].getTime(), i];
+        res[i] = { x: date[i].getTime(), y: cash[i].value, detail: detail };
     }
+    return res;
+}
+
+function calcMarketValue(trade) {
+    return currency(trade.price).multiply(trade.shares);
+}
+
+function calcuPositionChangeInDay(trades, time, start, position) {
+    let index = start,
+        detail = new Array();
+
+    for (let i = start; i < trades.length; i++) {
+        let trade = trades[i];
+        let timestamp = new Date(trade.date).getTime();
+        // console.log(i + " " + timestamp + " " + time + " ");
+        // console.log(trade);
+        if (timestamp > time) break;
+        if (timestamp === time) {
+            // console.log(timestamp + " " + data[i][0] + " " + data[i][1]);
+            index = i + 1;
+            detail.push(trade);
+
+            let contains = false;
+            for (let pos of position) {
+                if (pos[0] === trade.code && pos[1] === trade.name) {
+                    contains = true;
+                    pos[2] += trade.shares;
+                }
+            }
+
+            if (!contains) {
+                position.push([trade.code, trade.name, trade.shares]);
+            }
+        }
+    }
+    return {
+        index: index,
+        detail: detail
+    }
+}
+
+function getCurrentPrice(code) {
+    return currency(1);
+}
+
+function parseTrades(trades) {
+    let position = new Array(),
+        date = new Array();
+
+    date[0] = new Date(trades[0].date);
+    date[0].setDate(date[0].getDate());
+    // console.log(date);
+    let now = new Date("2019-04-22");
+    let days = (now - date[0]) / 1000 / 3600 / 24;
+    // console.log(days);
+    let res = new Array();
+    // console.log(d1);
+    let search_index = 0;
+
+    for (let i = 0; i < days; i++) {
+        let detail = [];
+        if (i === 0) {
+            position[i] = new Array();
+        } else {
+            date[i] = new Date(date[i - 1]);
+            date[i].setDate(date[i - 1].getDate() + 1);
+            position[i] = Array.from(position[i - 1]);
+        }
+
+        // console.log(i + " search:" + search_index);
+        if (search_index < trades.length) {
+            let ob = calcuPositionChangeInDay(trades, date[i].getTime(), search_index, position[i]);
+            search_index = ob.index;
+            detail = ob.detail;
+        }
+
+        let market_value = currency(0);
+        for (let pos of position[i]) {
+            market_value = market_value.add(getCurrentPrice(pos[0]).multiply(pos[2]));
+        }
+
+        res[i] = { x: date[i].getTime(), y: market_value.value, detail: detail };
+    }
+    return res;
+}
+const SERIES_NAME_CASH = "现金";
+const SERIES_NAME_MARKET_VALUE = "市值";
+
+$.getJSON(window.location.origin + '/api/trades_fund_history', function (data) {
+    // console.log(data);
+    let fund = data.fund;
+    let trades = data.trades;
+    // console.log(fund);
+    let cash = parseFundHistory(fund);
+    let stock = parseTrades(trades)
 
     Highcharts.stockChart('container', {
 
@@ -121,13 +209,17 @@ $.getJSON(window.location.origin + '/api/fund_history', function (data) {
             formatter: function () {
                 return ['<b>' + format(new Date(this.x)) + '</b>'].concat(
                     this.points.map(function (point) {
-                        // console.log(point);
+                        console.log(point);
                         let str = '';
                         if (point.point.detail) {
                             // console.log(point.point.detail);
-                            for (dt of point.point.detail) {
+                            for (let detail of point.point.detail) {
                                 // console.log(dt);
-                                str += '<br>' + dt[1] + ' ' + dt[2];
+                                if (point.series.name === SERIES_NAME_CASH) {
+                                    str += '<br>' + detail[1] + ' ' + detail[2];
+                                } else if (point.series.name === SERIES_NAME_MARKET_VALUE) {
+                                    str += '<br>' + detail.code + ' ' + detail.name + ' ' + detail.shares;
+                                }
                             }
                         }
                         // console.log(str);
@@ -147,11 +239,12 @@ $.getJSON(window.location.origin + '/api/fund_history', function (data) {
         },
         series: [{
             turboThreshold: 0,
-            name: "现金",
-            data: d1
+            name: SERIES_NAME_CASH,
+            data: cash
         }, {
-            name: "test",
-            data: d2
+            turboThreshold: 0,
+            name: SERIES_NAME_MARKET_VALUE,
+            data: stock
         }]
     })
 });
