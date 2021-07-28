@@ -9,6 +9,7 @@ function generateId() {
 export var sequelize = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     dialect: config.dialect,
+    timezone: config.timezone,
     define: {
         charset: 'utf8',
         collate: 'utf8_general_ci'
@@ -40,14 +41,14 @@ export function defineModel(name, attributes) {
         type: ID_TYPE,
         primaryKey: true
     };
-    attrs.createdAt = {
-        type: DataTypes.BIGINT,
-        allowNull: false
-    };
-    attrs.updatedAt = {
-        type: DataTypes.BIGINT,
-        allowNull: false
-    };
+    // attrs.createdAt = {
+    //     type: DataTypes.BIGINT,
+    //     allowNull: false
+    // };
+    // attrs.updatedAt = {
+    //     type: DataTypes.BIGINT,
+    //     allowNull: false
+    // };
     // printModel(name,attrs);
     return sequelize.define(name, attrs, {
         tableName: name,
@@ -61,11 +62,11 @@ export function defineModel(name, attributes) {
                     if (!obj.id) {
                         obj.id = generateId();
                     }
-                    obj.createdAt = now;
-                    obj.updatedAt = now;
+                    // obj.createdAt = now;
+                    // obj.updatedAt = now;
                 } else {
                     console.log('will update entity...');
-                    obj.updatedAt = now;
+                    // obj.updatedAt = now;
                 }
             }
         }
