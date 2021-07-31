@@ -5,9 +5,6 @@ pipeline {
         stage('Prepare') {
             steps {
                 // dir('/var/www/node/stock') {
-                    // some block
-                    // sh 'll ~/.ssh/id_rsa.pub'
-                    // sh 'cat ~/.ssh/id_rsa.pub'
                     sh 'cd /var/www/node/stock;pwd;git pull;tsc'
                     // sh 'git pull'
                     // sh 'tsc'
