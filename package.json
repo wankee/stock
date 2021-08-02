@@ -18,7 +18,7 @@
         "koa-bodyparser": "^4.2.1",
         "koa-router": "^7.4.0",
         "mime": "^2.4.2",
-        "mysql2": "^1.6.5",
+        "mysql2": "^2.2.5",
         "mz": "^2.7.0",
         "nunjucks": "^3.2.0",
         "sequelize": "^5.7.6"
