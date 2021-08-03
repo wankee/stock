@@ -10,7 +10,7 @@ db.sync(() => {
     initFund();
     initTradeFromCSV();
 }, (err) => {
-    console.log('=====error=====');
+    console.log('error:'+err);
 });
 
 function initFund() {
