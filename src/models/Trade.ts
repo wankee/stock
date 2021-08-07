@@ -17,7 +17,7 @@ Trade.init({
     transfer_tax: DataTypes.DECIMAL(12, 2),
     dividend_tax: DataTypes.DECIMAL(12, 2),
     dividend: DataTypes.DECIMAL(12, 2),
-    sum: DataTypes.DECIMAL(12, 2),
+    balance: DataTypes.DECIMAL(12, 2),
 }, {
     sequelize,
     modelName: 'trade',

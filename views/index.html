@@ -1,68 +1,67 @@
 {% extends "base.html" %} {% block main %}
 
 <script>
-
-$(function () {
-    var vm = new Vue({
-        el: '#product-list',
-        data: {
-            trades: []
-        },
-        methods: {
-            deleteProduct: function (id) {
-                var that = this;
-                // AJAX提交JSON:
-                $.ajax({
-                    type: 'delete',
-                    dataType: 'json',
-                    url: '/api/trades/' + id
-                }).done(function (r) {
-                    console.log(r);
-                    var i;
-                    for (i=0; i<that.trades.length; i++) {
-                        if (that.trades[i].id === r.id) {
-                            that.trades.splice(i, 1);
-                            return;
+    $(function() {
+        var vm = new Vue({
+            el: '#product-list',
+            data: {
+                trades: []
+            },
+            methods: {
+                deleteProduct: function(id) {
+                    var that = this;
+                    // AJAX提交JSON:
+                    $.ajax({
+                        type: 'delete',
+                        dataType: 'json',
+                        url: '/api/trades/' + id
+                    }).done(function(r) {
+                        console.log(r);
+                        var i;
+                        for (i = 0; i < that.trades.length; i++) {
+                            if (that.trades[i].id === r.id) {
+                                that.trades.splice(i, 1);
+                                return;
+                            }
                         }
-                    }
-                }).fail(function (jqXHR, textStatus) {
-                    // Not 200:
-                    alert('Error: ' + jqXHR.status);
-                });
+                    }).fail(function(jqXHR, textStatus) {
+                        // Not 200:
+                        alert('Error: ' + jqXHR.status);
+                    });
+                }
             }
-        }
-    });
+        });
 
-    $.getJSON('/api/trades').done(function (data) {
-        vm.trades = data.trades;
-    }).fail(function (jqXHR, textStatus) {
-        alert('Error: ' + jqXHR.status);
-    });
-
-    $('#product-form').submit(function (e) {
-        e.preventDefault();
-        var
-            trade = {
-                name: $(this).find('input[name=name]').val(),
-                code: $(this).find('input[name=manufacturer]').val(),
-                price: parseFloat($(this).find('input[name=price]').val())
-            };
-        // AJAX提交JSON:
-        $.ajax({
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            url: '/api/trades',
-            data: JSON.stringify(trade)
-        }).done(function (r) {
-            console.log(r);
-            vm.trades.push(r);
-        }).fail(function (jqXHR, textStatus) {
-            // Not 200:
+        $.getJSON('/api/trades').done(function(data) {
+            vm.trades = data.trades;
+        }).fail(function(jqXHR, textStatus) {
             alert('Error: ' + jqXHR.status);
         });
+
+        $('#product-form').submit(function(e) {
+            e.preventDefault();
+            var
+                trade = {
+                    name: $(this).find('input[name=name]').val(),
+                    code: $(this).find('input[name=manufacturer]').val(),
+                    price: parseFloat($(this).find('input[name=price]').val())
+                };
+            // AJAX提交JSON:
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                url: '/api/trades',
+                data: JSON.stringify(trade)
+            }).done(function(r) {
+                console.log(r);
+                vm.trades.push(r);
+            }).fail(function(jqXHR, textStatus) {
+                // Not 200:
+                alert('Error: ' + jqXHR.status);
+            });
+        });
     });
-});
 </script>
 
 <div class="container">

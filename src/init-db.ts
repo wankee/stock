@@ -70,7 +70,7 @@ function initTradeFromCSV() {
                     transfer_tax: row[10],
                     dividend_tax: row[11],
                     dividend: row[12],
-                    sum: row[13],
+                    balance: row[13],
                 });
                 console.log("=====after create=========");
             }

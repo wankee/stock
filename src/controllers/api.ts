@@ -11,7 +11,7 @@ function getFundHistory() {
 
 function getTrades() {
     return Trade.findAll({
-        attributes: ['date', 'code', 'name', 'price', 'shares'],
+        attributes: ['id','date', 'code', 'name', 'price', 'shares'],
         order: [['date', 'ASC']]
     });
 }
@@ -22,12 +22,21 @@ function getTrade(id) {
         }
     });
 }
-function createTrade(name, code, price) {
+function createTrade(trade) {
     return Trade.create({
-        code: code,
-        name: name,
-        price: price,
-        shares: 200,
+        code: trade.code,
+        name: trade.name,
+        price: trade.price,
+        shares: trade.shares,
+        total_price: trade.total_price,
+        total_fee: trade.total_fee,
+        commission: trade.commission,
+        fees: trade.fees,
+        stamp_duty: trade.stamp_duty,
+        transfer_tax: trade.transfer_tax,
+        dividend_tax: trade.dividend_tax,
+        dividend: trade.dividend,
+        balance: trade.balance,
     });
 }
 function deleteTrade(id) {
@@ -71,8 +80,9 @@ module.exports = {
     },
 
     'POST /api/trades': async (ctx, next) => {
+        // console.log(ctx.request.body);
         ctx.rest(
-            await createTrade(ctx.request.body.name, ctx.request.body.code, parseFloat(ctx.request.body.price))
+            await createTrade(ctx.request.body)
         );
     },
 

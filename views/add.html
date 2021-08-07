@@ -49,118 +49,90 @@
     </header>
 
     <div class="bd-cheatsheet container-fluid bg-body">
+        <!-- <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#007aff"/></svg>
+
+                <strong class="me-auto">Bootstrap</strong>
+                <small class="text-muted">11 mins ago</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Hello, world! This is a toast message.
+            </div>
+        </div> -->
         <section id="forms">
             <!-- <h2 class="sticky-xl-top fw-bold pt-3 pt-xl-5 pb-2 pb-xl-3">Forms</h2> -->
             <article class="my-3" id="validation">
-                <div class="bd-heading sticky-xl-top align-self-start mt-5 mb-3 mt-xl-0 mb-xl-2">
-                </div>
 
                 <div>
                     <div class="bd-example">
+
                         <form class="row g-3" id="submit-form">
                             <div class="col-md-3">
-                                <label for="validationServer01" class="form-label">代码</label>
-                                <input type="text" name="code" class="form-control is-valid" id="validationServer01" required>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
+                                <label for="code" class="form-label">代码</label>
+                                <input type="text" class="form-control is-valid" id="code" required>
                             </div>
 
                             <div class="col-md-3">
-                                <label for="validationServer02" class="form-label">名称</label>
-                                <input type="text" name="name" class="form-control is-valid" id="validationServer02" required>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                </div>
+                                <label for="name" class="form-label">名称</label>
+                                <input type="text" class="form-control" id="name" required>
                             </div>
 
                             <div class="col-md-3">
-                                <label for="validationServerUsername" class="form-label">价格</label>
-                                <div class="input-group has-validation">
-                                    <input type="text" name="price" class="form-control is-invalid" id="validationServerUsername" aria-describedby="inputGroupPrepend3" required>
-                                    <div class="invalid-feedback">
-                                        Please choose a username.
-                                    </div>
-                                </div>
+                                <label for="price" class="form-label">价格</label>
+                                <input type="text" class="form-control" id="price">
                             </div>
 
-                            <!-- <div class="col-md-3">
-                <label for="validationServerUsername" class="form-label">股数</label>
-                <div class="input-group has-validation">
-                  <input type="text" class="form-control is-invalid" id="validationServerUsername"
-                    aria-describedby="inputGroupPrepend3" required>
-                  <div class="invalid-feedback">
-                    Please choose a username.
-                  </div>
-                </div>
-              </div>
+                            <div class="col-md-3">
+                                <label for="shares" class="form-label">股数</label>
+                                <input type="text" class="form-control" id="shares">
+                            </div>
 
-              <div class="col-md-3">
-                <label for="validationServer03" class="form-label">总价</label>
-                <input type="text" class="form-control is-invalid" id="validationServer03" required>
-                <div class="invalid-feedback">
-                  Please provide a valid city.
-                </div>
-              </div> -->
+                            <div class="col-md-3">
+                                <label for="total-price" class="form-label">总价</label>
+                                <input type="text" class="form-control" id="total-price">
+                            </div>
 
-                            <!-- <div class="col-md-3">
-                <label for="validationServer04" class="form-label">总费用</label>
-                <select class="form-select is-invalid" id="validationServer04" required>
-                  <option selected disabled value="">Choose...</option>
-                  <option>...</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please select a valid state.
-                </div>
-              </div>
+                            <div class="col-md-3">
+                                <label for="total-fee" class="form-label">总费用</label>
+                                <input type="text" class="form-control" id="total-fee">
+                            </div>
 
-              <div class="col-md-3">
-                <label for="validationServer05" class="form-label">佣金</label>
-                <input type="text" class="form-control is-invalid" id="validationServer05" required>
-                <div class="invalid-feedback">
-                  Please provide a valid zip.
-                </div>
-              </div>
+                            <div class="col-md-3">
+                                <label for="commission" class="form-label">佣金</label>
+                                <input type="text" class="form-control" id="commission">
+                            </div>
 
-              <div class="col-md-3">
-                <label for="validationServer05" class="form-label">规费</label>
-                <input type="text" class="form-control is-invalid" id="validationServer05" required>
-                <div class="invalid-feedback">
-                  Please provide a valid zip.
-                </div>
-              </div>
+                            <div class="col-md-3">
+                                <label for="fees" class="form-label">规费</label>
+                                <input type="text" class="form-control" id="fees">
+                            </div>
 
-              <div class="col-md-3">
-                <label for="validationServer05" class="form-label">印花税</label>
-                <input type="text" class="form-control is-invalid" id="validationServer05" required>
-                <div class="invalid-feedback">
-                  Please provide a valid zip.
-                </div>
-              </div>
+                            <div class="col-md-3">
+                                <label for="stamp-duty" class="form-label">印花税</label>
+                                <input type="text" class="form-control" id="stamp-duty">
+                            </div>
 
-              <div class="col-md-3">
-                <label for="validationServer05" class="form-label">过户费</label>
-                <input type="text" class="form-control is-invalid" id="validationServer05" required>
-                <div class="invalid-feedback">
-                  Please provide a valid zip.
-                </div>
-              </div>
+                            <div class="col-md-3">
+                                <label for="transfer-tax" class="form-label">过户费</label>
+                                <input type="text" class="form-control" id="transfer-tax">
+                            </div>
 
-              <div class="col-md-3">
-                <label for="validationServer05" class="form-label">股息税</label>
-                <input type="text" class="form-control is-invalid" id="validationServer05" required>
-                <div class="invalid-feedback">
-                  Please provide a valid zip.
-                </div>
-              </div>
+                            <div class="col-md-3">
+                                <label for="dividend-tax" class="form-label">股息税</label>
+                                <input type="text" class="form-control" id="dividend-tax">
+                            </div>
 
-              <div class="col-md-3">
-                <label for="validationServer05" class="form-label">收支</label>
-                <input type="text" class="form-control is-invalid" id="validationServer05" required>
-                <div class="invalid-feedback">
-                  Please provide a valid zip.
-                </div>
-              </div> -->
+                            <div class="col-md-3">
+                                <label for="dividend" class="form-label">股息</label>
+                                <input type="text" class="form-control" id="dividend">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="balance" class="form-label">收支</label>
+                                <input type="text" class="form-control" id="balance">
+                            </div>
 
                             <!-- <div class="col-12">
                 <div class="form-check">

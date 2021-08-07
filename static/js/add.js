@@ -6,12 +6,24 @@
     $(function() {
         $('#submit-form').submit(function(e) {
             e.preventDefault();
-            var
-                trade = {
-                    code: $(this).find('input[name=code]').val(),
-                    name: $(this).find('input[name=name]').val(),
-                    price: parseFloat($(this).find('input[name=price]').val())
-                };
+            var trade = {
+                code: $(this).find('input[id=code]').val(),
+                name: $(this).find('input[id=name]').val(),
+                price: parseFloat($(this).find('input[id=price]').val()),
+                shares: parseFloat($(this).find('input[id=shares]').val()),
+                total_price: parseFloat($(this).find('input[id=total-price]').val()),
+                total_fee: parseFloat($(this).find('input[id=total-fee]').val()),
+                commission: parseFloat($(this).find('input[id=commission]').val()),
+                fees: parseFloat($(this).find('input[id=fees]').val()),
+                stamp_duty: parseFloat($(this).find('input[id=stamp-duty]').val()),
+                transfer_tax: parseFloat($(this).find('input[id=transfer-tax]').val()),
+                dividend_tax: parseFloat($(this).find('input[id=dividend-tax]').val()),
+                dividend: parseFloat($(this).find('input[id=dividend]').val()),
+                balance: parseFloat($(this).find('input[id=balance]').val())
+
+            };
+            console.log(trade)
+
             // AJAX提交JSON:
             $.ajax({
                 type: 'post',
@@ -26,8 +38,8 @@
                 // Not 200:
                 alert('Error: ' + jqXHR.status);
             });
-        });
-    });
+        })
+    })
 
     // Tooltip and popover demos
     document.querySelectorAll('.tooltip-demo')
