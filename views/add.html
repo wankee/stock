@@ -10,10 +10,13 @@
     <title>Cheatsheet · Bootstrap v5.0</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="/static/js/jquery.min.js"></script>
     <script src="/static/js/vue.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
     <script src="/static/js/add.js"></script>
 
     <style>
@@ -24,7 +27,7 @@
             -moz-user-select: none;
             user-select: none;
         }
-        
+
         @media (min-width: 768px) {
             .bd-placeholder-img-lg {
                 font-size: 3.5rem;
@@ -37,123 +40,131 @@
 </head>
 
 <body>
-    <header class="bd-header bg-dark py-3 d-flex align-items-stretch border-bottom border-dark">
-        <div class="container-fluid d-flex align-items-center">
-            <h1 class="d-flex align-items-center fs-4 text-white mb-0">
-                <a href="/">
-                    <img src="/static/assets/brand/bootstrap-logo-white.svg" width="38" height="30" class="me-3" alt="Bootstrap"></a>
-                Cheatsheet
-            </h1>
-            <!-- <a href="../examples/cheatsheet-rtl/" class="ms-auto link-light" hreflang="ar">RTL cheatsheet</a> -->
-        </div>
-    </header>
-
-    <div class="bd-cheatsheet container-fluid bg-body">
-        <!-- <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#007aff"/></svg>
-
-                <strong class="me-auto">Bootstrap</strong>
-                <small class="text-muted">11 mins ago</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                Hello, world! This is a toast message.
-            </div>
-        </div> -->
-        <section id="forms">
-            <!-- <h2 class="sticky-xl-top fw-bold pt-3 pt-xl-5 pb-2 pb-xl-3">Forms</h2> -->
-            <article class="my-3" id="validation">
-
-                <div>
-                    <div class="bd-example">
-
-                        <form class="row g-3" id="submit-form">
-                            <div class="col-md-3">
-                                <label for="code" class="form-label">代码</label>
-                                <input type="text" class="form-control is-valid" id="code" required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="name" class="form-label">名称</label>
-                                <input type="text" class="form-control" id="name" required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="price" class="form-label">价格</label>
-                                <input type="text" class="form-control" id="price">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="shares" class="form-label">股数</label>
-                                <input type="text" class="form-control" id="shares">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="total-price" class="form-label">总价</label>
-                                <input type="text" class="form-control" id="total-price">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="total-fee" class="form-label">总费用</label>
-                                <input type="text" class="form-control" id="total-fee">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="commission" class="form-label">佣金</label>
-                                <input type="text" class="form-control" id="commission">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="fees" class="form-label">规费</label>
-                                <input type="text" class="form-control" id="fees">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="stamp-duty" class="form-label">印花税</label>
-                                <input type="text" class="form-control" id="stamp-duty">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="transfer-tax" class="form-label">过户费</label>
-                                <input type="text" class="form-control" id="transfer-tax">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="dividend-tax" class="form-label">股息税</label>
-                                <input type="text" class="form-control" id="dividend-tax">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="dividend" class="form-label">股息</label>
-                                <input type="text" class="form-control" id="dividend">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="balance" class="form-label">收支</label>
-                                <input type="text" class="form-control" id="balance">
-                            </div>
-
-                            <!-- <div class="col-12">
-                <div class="form-check">
-                  <input class="form-check-input is-invalid" type="checkbox" value="" id="invalidCheck3" required>
-                  <label class="form-check-label" for="invalidCheck3">
-                    Agree to terms and conditions
-                  </label>
-                  <div class="invalid-feedback">
-                    You must agree before submitting.
-                  </div>
-                </div>
-              </div> -->
-                            <div class="col-12">
-                                <button class="btn btn-primary" type="submit">提交</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </article>
-        </section>
+<header class="bd-header bg-dark py-3 d-flex align-items-stretch border-bottom border-dark">
+    <div class="container-fluid d-flex align-items-center">
+        <h1 class="d-flex align-items-center fs-4 text-white mb-0">
+            <a href="/">
+                <img src="/static/assets/brand/bootstrap-logo-white.svg" width="38" height="30" class="me-3"
+                     alt="Bootstrap"></a>
+            Cheatsheet
+        </h1>
+        <!-- <a href="../examples/cheatsheet-rtl/" class="ms-auto link-light" hreflang="ar">RTL cheatsheet</a> -->
     </div>
+</header>
+
+<div class="bd-cheatsheet container-fluid bg-body">
+    <!-- <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#007aff"/></svg>
+
+            <strong class="me-auto">Bootstrap</strong>
+            <small class="text-muted">11 mins ago</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Hello, world! This is a toast message.
+        </div>
+    </div> -->
+    <section id="forms">
+        <!-- <h2 class="sticky-xl-top fw-bold pt-3 pt-xl-5 pb-2 pb-xl-3">Forms</h2> -->
+        <article class="my-3" id="validation">
+
+            <div>
+                <div class="bd-example">
+
+                    <form class="row g-3" id="submit-form">
+                        <div class="col-md-3">
+                            <label for="date" class="form-label">日期</label>
+                            <input type="date" class="form-control" id="date" name="trip-start"
+                                   value="2018-07-22"
+                                   min="2018-01-01" max="2018-12-31" required>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="code" class="form-label">代码</label>
+                            <input type="text" class="form-control" id="code" required>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="name" class="form-label">名称</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="price" class="form-label">价格</label>
+                            <input type="text" class="form-control" id="price">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="shares" class="form-label">股数</label>
+                            <input type="text" class="form-control" id="shares">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="total-price" class="form-label">总价</label>
+                            <input type="text" class="form-control" id="total-price">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="total-fee" class="form-label">总费用</label>
+                            <input type="text" class="form-control" id="total-fee">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="commission" class="form-label">佣金</label>
+                            <input type="text" class="form-control" id="commission">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="fees" class="form-label">规费</label>
+                            <input type="text" class="form-control" id="fees">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="stamp-duty" class="form-label">印花税</label>
+                            <input type="text" class="form-control" id="stamp-duty">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="transfer-tax" class="form-label">过户费</label>
+                            <input type="text" class="form-control" id="transfer-tax">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="dividend-tax" class="form-label">股息税</label>
+                            <input type="text" class="form-control" id="dividend-tax">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="dividend" class="form-label">股息</label>
+                            <input type="text" class="form-control" id="dividend">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="balance" class="form-label">收支</label>
+                            <input type="text" class="form-control" id="balance">
+                        </div>
+
+                        <!-- <div class="col-12">
+            <div class="form-check">
+              <input class="form-check-input is-invalid" type="checkbox" value="" id="invalidCheck3" required>
+              <label class="form-check-label" for="invalidCheck3">
+                Agree to terms and conditions
+              </label>
+              <div class="invalid-feedback">
+                You must agree before submitting.
+              </div>
+            </div>
+          </div> -->
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </article>
+    </section>
+</div>
 </body>
 
 </html>
