@@ -7,6 +7,7 @@
         $('#submit-form').submit(function(e) {
             e.preventDefault();
             var trade = {
+                date: $(this).find('input[id=date]').val(),
                 code: $(this).find('input[id=code]').val(),
                 name: $(this).find('input[id=name]').val(),
                 price: parseFloat($(this).find('input[id=price]').val()),
@@ -33,10 +34,10 @@
                 data: JSON.stringify(trade)
             }).done(function(r) {
                 console.log(r);
-                vm.trades.push(r);
+                // vm.trades.push(r);
             }).fail(function(jqXHR, textStatus) {
                 // Not 200:
-                alert('Error: ' + jqXHR.status);
+                alert('Error: ' + jqXHR.status+',Message'+textStatus);
             });
         })
     })

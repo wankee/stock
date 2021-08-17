@@ -24,6 +24,7 @@ function getTrade(id) {
 }
 function createTrade(trade) {
     return Trade.create({
+        date: trade.date,
         code: trade.code,
         name: trade.name,
         price: trade.price,
