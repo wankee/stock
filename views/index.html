@@ -1,21 +1,21 @@
 {% extends "base.html" %} {% block main %}
 
 <script>
-    $(function() {
+    $(function () {
         var vm = new Vue({
             el: '#product-list',
             data: {
                 trades: []
             },
             methods: {
-                deleteProduct: function(id) {
+                deleteProduct: function (id) {
                     var that = this;
                     // AJAX提交JSON:
                     $.ajax({
                         type: 'delete',
                         dataType: 'json',
                         url: '/api/trades/' + id
-                    }).done(function(r) {
+                    }).done(function (r) {
                         console.log(r);
                         var i;
                         for (i = 0; i < that.trades.length; i++) {
@@ -24,7 +24,7 @@
                                 return;
                             }
                         }
-                    }).fail(function(jqXHR, textStatus) {
+                    }).fail(function (jqXHR, textStatus) {
                         // Not 200:
                         alert('Error: ' + jqXHR.status);
                     });
@@ -32,13 +32,13 @@
             }
         });
 
-        $.getJSON('/api/trades').done(function(data) {
+        $.getJSON('/api/trades').done(function (data) {
             vm.trades = data.trades;
-        }).fail(function(jqXHR, textStatus) {
+        }).fail(function (jqXHR, textStatus) {
             alert('Error: ' + jqXHR.status);
         });
 
-        $('#product-form').submit(function(e) {
+        $('#product-form').submit(function (e) {
             e.preventDefault();
             var
                 trade = {
@@ -53,10 +53,10 @@
                 contentType: 'application/json',
                 url: '/api/trades',
                 data: JSON.stringify(trade)
-            }).done(function(r) {
+            }).done(function (r) {
                 console.log(r);
                 vm.trades.push(r);
-            }).fail(function(jqXHR, textStatus) {
+            }).fail(function (jqXHR, textStatus) {
                 // Not 200:
                 alert('Error: ' + jqXHR.status);
             });
@@ -74,27 +74,30 @@
                 <div class="panel-body">
                     <table id="product-list" class="table table-hover">
                         <thead>
-                            <tr>
-                                <th style="width:50px"></th>
-                                <th>Product</th>
-                                <th style="width:150px">Price</th>
-                                <th style="width:50px"></th>
-                            </tr>
+                        <tr>
+                            <th style="width:50px"></th>
+                            <th>Product</th>
+                            <th style="width:150px">Price</th>
+                            <th style="width:50px"></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="p in trades">
-                                <td>
-                                    <img class="media-object" style="width:40px; height:40px;" src="/static/images/icon.png">
-                                </td>
-                                <td>
-                                    <h4 class="media-heading" v-text="p.name"></h4>
-                                    <p><span v-text="p.code"></span> <span><a v-on:click="deleteProduct(p.id)" href="#0">delete</a></span></p>
-                                </td>
-                                <td>
-                                    <p style="font-size:2em">¥ <span v-text="p.price"></span></p>
-                                </td>
-                                <td><a target="_blank" v-bind:href="'http://search.jd.com/Search?enc=utf-8&keyword=' + encodeURIComponent(p.name)">Buy</a>
-                            </tr>
+                        <tr v-for="p in trades">
+                            <td>
+                                <img class="media-object" style="width:40px; height:40px;"
+                                     src="/static/images/icon.png">
+                            </td>
+                            <td>
+                                <h4 class="media-heading" v-text="p.name"></h4>
+                                <p><span v-text="p.code"></span> <span><a v-on:click="deleteProduct(p.id)" href="#0">delete</a></span>
+                                </p>
+                            </td>
+                            <td>
+                                <p style="font-size:2em">¥ <span v-text="p.price"></span></p>
+                            </td>
+                            <td><a target="_blank"
+                                   v-bind:href="'http://search.jd.com/Search?enc=utf-8&keyword=' + encodeURIComponent(p.name)">Buy</a>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -114,7 +117,8 @@
                         </div>
                         <div class="form-group">
                             <label>Manufacturer</label>
-                            <input type="text" name="manufacturer" class="form-control" placeholder="Manufacturer name" value="">
+                            <input type="text" name="manufacturer" class="form-control" placeholder="Manufacturer name"
+                                   value="">
                             <p class="help-block">Manufacturer name</p>
                         </div>
                         <div class="form-group">
@@ -143,7 +147,9 @@
                 </div>
                 <div class="panel-body">
                     <p>full-stack JavaScript course</p>
-                    <p><a target="_blank" href="http://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000">Read more</a></p>
+                    <p><a target="_blank"
+                          href="http://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000">Read
+                        more</a></p>
                 </div>
             </div>
         </div>
@@ -154,7 +160,9 @@
                 </div>
                 <div class="panel-body">
                     <p>the latest Python course</p>
-                    <p><a target="_blank" href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000">Read more</a></p>
+                    <p><a target="_blank"
+                          href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000">Read
+                        more</a></p>
                 </div>
             </div>
         </div>
@@ -165,7 +173,9 @@
                 </div>
                 <div class="panel-body">
                     <p>A course about git version control</p>
-                    <p><a target="_blank" href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">Read more</a></p>
+                    <p><a target="_blank"
+                          href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">Read
+                        more</a></p>
                 </div>
             </div>
         </div>

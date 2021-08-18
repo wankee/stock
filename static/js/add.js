@@ -1,10 +1,17 @@
 /* global bootstrap: false */
 
-(function() {
+(function () {
     'use strict'
 
-    $(function() {
-        $('#submit-form').submit(function(e) {
+    $(function () {
+        var app = new Vue({
+            el: '#app22',
+            data: {
+                message: 'Hello Vue!'
+            }
+        });
+
+        $('#submit-form').submit(function (e) {
             e.preventDefault();
             var trade = {
                 date: $(this).find('input[id=date]').val(),
@@ -32,31 +39,31 @@
                 contentType: 'application/json',
                 url: '/api/trades',
                 data: JSON.stringify(trade)
-            }).done(function(r) {
+            }).done(function (r) {
                 console.log(r);
                 // vm.trades.push(r);
-            }).fail(function(jqXHR, textStatus) {
+            }).fail(function (jqXHR, textStatus) {
                 // Not 200:
-                alert('Error: ' + jqXHR.status+',Message'+textStatus);
+                alert('Error: ' + jqXHR.status + ',Message' + textStatus);
             });
         })
     })
 
     // Tooltip and popover demos
     document.querySelectorAll('.tooltip-demo')
-        .forEach(function(tooltip) {
+        .forEach(function (tooltip) {
             new bootstrap.Tooltip(tooltip, {
                 selector: '[data-bs-toggle="tooltip"]'
             })
         })
 
     document.querySelectorAll('[data-bs-toggle="popover"]')
-        .forEach(function(popover) {
+        .forEach(function (popover) {
             new bootstrap.Popover(popover)
         })
 
     document.querySelectorAll('.toast')
-        .forEach(function(toastNode) {
+        .forEach(function (toastNode) {
             var toast = new bootstrap.Toast(toastNode, {
                 autohide: false
             })
@@ -66,8 +73,8 @@
 
     // Disable empty links and submit buttons
     document.querySelectorAll('[href="#"], [type="submit"]')
-        .forEach(function(link) {
-            link.addEventListener('click', function(event) {
+        .forEach(function (link) {
+            link.addEventListener('click', function (event) {
                 event.preventDefault()
             })
         })
