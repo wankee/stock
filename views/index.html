@@ -9,7 +9,8 @@
             },
             methods: {
                 deleteProduct: function (id) {
-                    var that = this;
+                    let that = this;
+                    let reqId =id;
                     // AJAX提交JSON:
                     $.ajax({
                         type: 'delete',
@@ -19,7 +20,7 @@
                         console.log(r);
                         var i;
                         for (i = 0; i < that.trades.length; i++) {
-                            if (that.trades[i].id === r.id) {
+                            if (that.trades[i].id === reqId) {
                                 that.trades.splice(i, 1);
                                 return;
                             }

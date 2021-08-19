@@ -1,7 +1,6 @@
 {% extends "base.html" %} {% block main %}
 
 <head>
-    <script src="/static/js/add.js"></script>
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -61,17 +60,17 @@
 
                         <div class="col-md-3">
                             <label for="price" class="form-label">价格</label>
-                            <input type="text" class="form-control" id="price">
+                            <input type="text" class="form-control" v-model="price" id="price">
                         </div>
 
                         <div class="col-md-3">
                             <label for="shares" class="form-label">股数</label>
-                            <input type="text" class="form-control" id="shares">
+                            <input type="text" class="form-control" v-model="shares" id="shares">
                         </div>
 
                         <div class="col-md-3">
                             <label for="total-price" class="form-label">总价</label>
-                            <input type="text" class="form-control" id="total-price">
+                            <input type="text" class="form-control" v-model="total_price" id="total-price">
                         </div>
 
                         <div class="col-md-3">
@@ -134,5 +133,7 @@
         </article>
     </section>
 </div>
+
+<script src="/static/js/add.js"></script>
 
 {% endblock %}
