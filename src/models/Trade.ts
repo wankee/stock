@@ -7,7 +7,7 @@ Trade.init({
     date: DataTypes.DATEONLY,
     code: DataTypes.INTEGER({ length: 6, zerofill: true }),
     name: DataTypes.STRING(10),
-    price: DataTypes.DECIMAL(12, 2),
+    price: DataTypes.DECIMAL(12, 3),
     shares: DataTypes.INTEGER,
     total_price: DataTypes.DECIMAL(12, 2),
     total_fee: DataTypes.DECIMAL(12, 2),

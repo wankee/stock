@@ -11,7 +11,7 @@ function getFundHistory() {
 
 function getTrades() {
     return Trade.findAll({
-        attributes: ['id','date', 'code', 'name', 'price', 'shares'],
+        attributes: ['id','date', 'code', 'name', 'price', 'shares','balance'],
         order: [['date', 'DESC']]
     });
 }
