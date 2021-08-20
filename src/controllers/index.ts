@@ -5,7 +5,7 @@ export = {
     'GET /add.html': async (ctx, next) => {
         ctx.render('add.html');
     },
-    'GET /fund_history.html': async (ctx, next) => {
-        ctx.render('fund_history.html');
+    'GET /capital-detail.html': async (ctx, next) => {
+        ctx.render('capital-detail.html');
     }
 };
