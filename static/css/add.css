@@ -7,6 +7,9 @@ body {
  * Bootstrap "Journal code" icon
  * @link https://icons.getbootstrap.com/icons/journal-code/
  */
+.span-tip {
+    font-size: 0.75rem;
+}
 
 .bd-heading a::before {
     display: inline-block;

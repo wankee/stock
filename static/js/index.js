@@ -2,7 +2,6 @@
 
 let vm = new Vue({
     el: '#div-container',
-    delimiters: ['[[', ']]'],
     data: {
         trades: [],
         totalBalance: 0

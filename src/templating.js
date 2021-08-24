@@ -12,7 +12,11 @@ function createEnv(path, opts) {
                 watch: watch,
             }), {
                 autoescape: autoescape,
-                throwOnUndefined: throwOnUndefined
+                throwOnUndefined: throwOnUndefined,
+                tags: {
+                    variableStart: '[[',
+                    variableEnd: ']]',
+                }
             });
     if (opts.filters) {
         for (var f in opts.filters) {

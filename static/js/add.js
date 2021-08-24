@@ -4,21 +4,35 @@
 //     'use strict'
 //
 //     $(function () {
-var app = new Vue({
-    delimiters: ['[[', ']]'],
+
+console.log(currency(0.1))
+let app = new Vue({
     el: '#submit-form',
     data: {
-        price: 120,
-        shares: 100,
-        message: 'Hello Vue!'
+        price: 0,
+        shares: 0,
+        commission: 0,
+        fees: 0,
+        stampDuty: 0,
+        transferTax: 0,
+        dividendTax: 0,
+        dividend: 0,
     },
     computed: {
-        total_price: function () {
+        totalPrice: function () {
             // `this` 指向 vm 实例
-            return this.price * this.shares
+            return currency(this.price).multiply(this.shares)
+        },
+        totalFee: function () {
+            // `this` 指向 vm 实例
+            return currency(this.commission).add(this.fees).add(this.stampDuty).add(this.transferTax)
+        },
+        balance: function () {
+            // `this` 指向 vm 实例
+            return currency(0).subtract(this.totalPrice).subtract(this.totalFee).subtract(this.dividendTax).add(this.dividend)
         }
     }
-});
+})
 
 $('#submit-form').submit(function (e) {
     e.preventDefault();

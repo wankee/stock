@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block main %}
+<script src="https://unpkg.com/currency.js@2.0.4/dist/currency.min.js"></script>
 
 <head>
     <style>
@@ -64,53 +65,53 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="shares" class="form-label">股数</label>
+                            <label for="shares" class="form-label">股数<span class="span-tip">（买入为正，卖出为负）</span></label>
                             <input type="text" class="form-control" v-model="shares" id="shares">
                         </div>
 
                         <div class="col-md-3">
                             <label for="total-price" class="form-label">总价</label>
-                            <input type="text" class="form-control" v-model="total_price" id="total-price">
+                            <input type="text" class="form-control" v-model="totalPrice" id="total-price">
                         </div>
 
                         <div class="col-md-3">
                             <label for="total-fee" class="form-label">总费用</label>
-                            <input type="text" class="form-control" id="total-fee">
+                            <input type="text" class="form-control" v-model="totalFee" id="total-fee">
                         </div>
 
                         <div class="col-md-3">
                             <label for="commission" class="form-label">佣金</label>
-                            <input type="text" class="form-control" id="commission">
+                            <input type="text" class="form-control" v-model="commission" id="commission">
                         </div>
 
                         <div class="col-md-3">
                             <label for="fees" class="form-label">规费</label>
-                            <input type="text" class="form-control" id="fees">
+                            <input type="text" class="form-control" v-model="fees" id="fees">
                         </div>
 
                         <div class="col-md-3">
                             <label for="stamp-duty" class="form-label">印花税</label>
-                            <input type="text" class="form-control" id="stamp-duty">
+                            <input type="text" class="form-control" v-model="stampDuty" id="stamp-duty">
                         </div>
 
                         <div class="col-md-3">
                             <label for="transfer-tax" class="form-label">过户费</label>
-                            <input type="text" class="form-control" id="transfer-tax">
+                            <input type="text" class="form-control" v-model="transferTax" id="transfer-tax">
                         </div>
 
                         <div class="col-md-3">
                             <label for="dividend-tax" class="form-label">股息税</label>
-                            <input type="text" class="form-control" id="dividend-tax">
+                            <input type="text" class="form-control" v-model="dividendTax" id="dividend-tax">
                         </div>
 
                         <div class="col-md-3">
                             <label for="dividend" class="form-label">股息</label>
-                            <input type="text" class="form-control" id="dividend">
+                            <input type="text" class="form-control" v-model="dividend" id="dividend">
                         </div>
 
                         <div class="col-md-3">
                             <label for="balance" class="form-label">收支</label>
-                            <input type="text" class="form-control" id="balance">
+                            <input type="text" class="form-control" v-model="balance" id="balance">
                         </div>
 
                         <!-- <div class="col-12">
