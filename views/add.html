@@ -1,4 +1,7 @@
-{% extends "base.html" %} {% block main %}
+{% extends "base.html" %}
+{% block title %}<title>添加交易记录</title>{% endblock %}
+
+{% block main %}
 <script src="https://unpkg.com/currency.js@2.0.4/dist/currency.min.js"></script>
 
 <head>
@@ -46,17 +49,17 @@
                     <form class="row g-3" id="submit-form">
                         <div class="col-md-3">
                             <label for="date" class="form-label">日期</label>
-                            <input type="date" class="form-control" id="date" required>
+                            <input type="date" class="form-control" v-model="date" id="date" required>
                         </div>
 
                         <div class="col-md-3">
                             <label for="code" class="form-label">代码</label>
-                            <input type="text" class="form-control" id="code" required>
+                            <input type="text" class="form-control" v-model="code" id="code" required>
                         </div>
 
                         <div class="col-md-3">
                             <label for="name" class="form-label">名称</label>
-                            <input type="text" class="form-control" id="name" required>
+                            <input type="text" class="form-control" v-model="name" id="name" required>
                         </div>
 
                         <div class="col-md-3">
@@ -126,7 +129,10 @@
             </div>
           </div> -->
                         <div class="col-12">
-                            <button class="btn btn-primary" type="submit">提交</button>
+                            <!--                            <button @click="test">测试</button>-->
+                            <!--                            <button class="btn btn-primary" type="submit">提交</button>-->
+                            <button class="btn btn-primary" @click="submit2" type="button">提交</button>
+
                         </div>
                     </form>
                 </div>
@@ -135,6 +141,5 @@
     </section>
 </div>
 
-<script src="/static/js/add.js"></script>
-
+<script src="/static/js/add.js" type="module"></script>
 {% endblock %}

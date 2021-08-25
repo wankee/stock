@@ -4,37 +4,83 @@
 //     'use strict'
 //
 //     $(function () {
+import {simpleDebounce} from './utils.js';
+// import simpleDebounce = require('./utils');
 
-console.log(currency(0.1))
 let app = new Vue({
     el: '#submit-form',
     data: {
-        price: 0,
-        shares: 0,
-        commission: 0,
-        fees: 0,
-        stampDuty: 0,
-        transferTax: 0,
-        dividendTax: 0,
-        dividend: 0,
+        date: "",
+        code: "",
+        name: "",
+        price: "",
+        shares: "",
+        commission: "",
+        fees: "",
+        stampDuty: "",
+        transferTax: "",
+        dividendTax: "",
+        dividend: ""
     },
     computed: {
         totalPrice: function () {
-            // `this` 指向 vm 实例
-            return currency(this.price).multiply(this.shares)
+            let tmp = currency(this.shares).multiply(this.price);
+            return tmp.value === 0 ? "" : tmp;
         },
         totalFee: function () {
-            // `this` 指向 vm 实例
-            return currency(this.commission).add(this.fees).add(this.stampDuty).add(this.transferTax)
+            let tmp = currency(this.commission).add(this.fees).add(this.stampDuty).add(this.transferTax);
+            return tmp.value === 0 ? "" : tmp;
         },
         balance: function () {
-            // `this` 指向 vm 实例
-            return currency(0).subtract(this.totalPrice).subtract(this.totalFee).subtract(this.dividendTax).add(this.dividend)
+            let tmp = currency(0).subtract(this.totalPrice).subtract(this.totalFee).subtract(this.dividendTax).add(this.dividend);
+            return tmp.value === 0 ? "" : tmp;
         }
+    },
+    methods: {
+        submit2: simpleDebounce(function (event) {
+            if (this.balance.value === 0 || this.balance === "") {
+                console.log("收支为0");
+                return;
+            }
+            // e.preventDefault();
+            let trade = {
+                date: this.date,
+                code: this.code,
+                name: this.name,
+                price: this.price,
+                shares: this.shares,
+                total_price: this.totalPrice,
+                total_fee: this.totalFee,
+                commission: this.commission,
+                fees: this.fees,
+                stamp_duty: this.stampDuty,
+                transfer_tax: this.transferTax,
+                dividend_tax: this.dividendTax,
+                dividend: this.dividend,
+                balance: this.balance
+            };
+            console.log(trade)
+
+            // AJAX提交JSON:
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                url: '/api/trades',
+                data: JSON.stringify(trade)
+            }).done(function (r) {
+                console.log(r);
+                // vm.trades.push(r);
+            }).fail(function (jqXHR, textStatus) {
+                // Not 200:
+                alert('Error: ' + jqXHR.status + ',Message' + textStatus);
+            });
+        }, 300)
     }
 })
 
 $('#submit-form').submit(function (e) {
+    console.log("===>submit");
     e.preventDefault();
     var trade = {
         date: $(this).find('input[id=date]').val(),
@@ -70,7 +116,7 @@ $('#submit-form').submit(function (e) {
         alert('Error: ' + jqXHR.status + ',Message' + textStatus);
     });
 })
-//     })
+
 //
 //     // Tooltip and popover demos
 //     document.querySelectorAll('.tooltip-demo')
