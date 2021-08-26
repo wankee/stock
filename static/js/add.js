@@ -49,15 +49,15 @@ let app = new Vue({
                 name: this.name,
                 price: this.price,
                 shares: this.shares,
-                total_price: this.totalPrice,
-                total_fee: this.totalFee,
+                total_price: this.totalPrice === "" ? 0 : this.totalPrice.value,
+                total_fee: this.totalFee === "" ? 0 : this.totalFee.value,
                 commission: this.commission,
                 fees: this.fees,
                 stamp_duty: this.stampDuty,
                 transfer_tax: this.transferTax,
                 dividend_tax: this.dividendTax,
                 dividend: this.dividend,
-                balance: this.balance
+                balance: this.balance === "" ? 0 : this.balance.value
             };
             console.log(trade)
 
