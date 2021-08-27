@@ -7,7 +7,7 @@
 import {simpleDebounce} from './utils.js';
 // import simpleDebounce = require('./utils');
 
-let app = new Vue({
+let vue = new Vue({
     el: '#submit-form',
     data: {
         date: "",
@@ -20,7 +20,9 @@ let app = new Vue({
         stampDuty: "",
         transferTax: "",
         dividendTax: "",
-        dividend: ""
+        dividend: "",
+        submitTime: 0,
+        isSubmitting: false
     },
     computed: {
         totalPrice: function () {
@@ -80,27 +82,31 @@ let app = new Vue({
 })
 
 $('#submit-form').submit(function (e) {
-    console.log("===>submit");
-    e.preventDefault();
-    var trade = {
-        date: $(this).find('input[id=date]').val(),
-        code: $(this).find('input[id=code]').val(),
-        name: $(this).find('input[id=name]').val(),
-        price: parseFloat($(this).find('input[id=price]').val()),
-        shares: parseFloat($(this).find('input[id=shares]').val()),
-        total_price: parseFloat($(this).find('input[id=total-price]').val()),
-        total_fee: parseFloat($(this).find('input[id=total-fee]').val()),
-        commission: parseFloat($(this).find('input[id=commission]').val()),
-        fees: parseFloat($(this).find('input[id=fees]').val()),
-        stamp_duty: parseFloat($(this).find('input[id=stamp-duty]').val()),
-        transfer_tax: parseFloat($(this).find('input[id=transfer-tax]').val()),
-        dividend_tax: parseFloat($(this).find('input[id=dividend-tax]').val()),
-        dividend: parseFloat($(this).find('input[id=dividend]').val()),
-        balance: parseFloat($(this).find('input[id=balance]').val())
+    let cur = new Date().getTime();
+    if (cur - vue.submitTime < 300) return false;
 
+    vue.submitTime = cur;
+
+    // e.preventDefault();
+    let trade = {
+        date: vue.date,
+        code: vue.code,
+        name: vue.name,
+        price: vue.price,
+        shares: vue.shares,
+        total_price: vue.totalPrice === "" ? 0 : vue.totalPrice.value,
+        total_fee: vue.totalFee === "" ? 0 : vue.totalFee.value,
+        commission: vue.commission,
+        fees: vue.fees,
+        stamp_duty: vue.stampDuty,
+        transfer_tax: vue.transferTax,
+        dividend_tax: vue.dividendTax,
+        dividend: vue.dividend,
+        balance: vue.balance === "" ? 0 : vue.balance.value
     };
     console.log(trade)
 
+    vue.isSubmitting = true;
     // AJAX提交JSON:
     $.ajax({
         type: 'post',
@@ -109,12 +115,22 @@ $('#submit-form').submit(function (e) {
         url: '/api/trades',
         data: JSON.stringify(trade)
     }).done(function (r) {
+        vue.price = "";
+        vue.shares = "";
+        vue.commission = "";
+        vue.fees = "";
+        vue.stampDuty = "";
+        vue.transferTax = "";
+        vue.dividendTax = "";
+        vue.dividend = "";
+        vue.isSubmitting = false;
         console.log(r);
-        // vm.trades.push(r);
     }).fail(function (jqXHR, textStatus) {
+        vue.isSubmitting = false;
         // Not 200:
         alert('Error: ' + jqXHR.status + ',Message' + textStatus);
     });
+    return false
 })
 
 //
