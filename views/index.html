@@ -10,38 +10,36 @@
         <div class="panel-heading">
             <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span> 总收益：{{totalBalance}}</h3>
         </div>
-        <div class="panel-body">
-            <table id="product-list" class="table table-hover">
-                <thead>
-                <tr>
-                    <th style="width:15%">日期</th>
-                    <th style="width:20%">名称</th>
-                    <!--                            <th style="width:150px">价格</th>-->
-                    <th style="width:10%">收支</th>
-                    <th style="width:10%"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="p in trades">
-                    <td class="td-text">
-                        {{p.date}}
-                    </td>
-                    <td class="td-text">
-                        <span class="media-heading" v-text="p.name">{{p.code}}{{p.name}}</span>
-                        <span v-text="p.code"></span>
-                    </td>
-                    <!--                            <td class="td-text">-->
-                    <!--                                ¥{{p.price}}-->
-                    <!--                            </td>-->
-                    <td class="td-text">
-                        {{p.balance}}
-                    </td>
-                    <td>
-                        <a @click="deleteProduct(p.id)" href="#0">delete</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <!--        <ul class="nav nav-tabs" id="myTab" role="tablist">-->
+        <!--            <li class="nav-item" role="presentation">-->
+        <!--                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>-->
+        <!--            </li>-->
+        <!--            <li class="nav-item" role="presentation">-->
+        <!--                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>-->
+        <!--            </li>-->
+        <!--            <li class="nav-item" role="presentation">-->
+        <!--                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>-->
+        <!--            </li>-->
+        <!--        </ul>-->
+        <!--        <div class="tab-content" id="myTabContent">-->
+        <!--            <div class="tab-pane show active" id="home" role="tabpanel" aria-labelledby="home-tab">1</div>-->
+        <!--            <div class="tab-pane " id="profile" role="tabpanel" aria-labelledby="profile-tab">2</div>-->
+        <!--            <div class="tab-pane " id="contact" role="tabpanel" aria-labelledby="contact-tab">3</div>-->
+        <!--        </div>-->
+
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+                        type="button" role="tab" aria-controls="nav-home" aria-selected="true">当前持仓
+                </button>
+                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+                        type="button" role="tab" aria-controls="nav-profile" aria-selected="false">已清仓
+                </button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">1</div>
+            <div class="tab-pane" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">2</div>
         </div>
     </div>
 </div>
