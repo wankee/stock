@@ -29,17 +29,22 @@
 
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
-                        type="button" role="tab" aria-controls="nav-home" aria-selected="true">当前持仓
+                <button class="nav-link " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">当前持仓
                 </button>
-                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
-                        type="button" role="tab" aria-controls="nav-profile" aria-selected="false">已清仓
+                <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">历史持仓
                 </button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">1</div>
-            <div class="tab-pane" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">2</div>
+            <div class="tab-pane" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">1</div>
+            <div class="tab-pane show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div v-for="p in clearedStocks">
+                    <div class="td-text">{{p.name}} ({{p.code}})</div>
+                    <div class="td-text">盈亏：<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span></div>
+                    <div class="td-text">{{p.endDate}}</div>
+                    <br>
+                </div>
+            </div>
         </div>
     </div>
 </div>
