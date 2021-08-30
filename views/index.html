@@ -1,7 +1,5 @@
-{% extends "base.html" %}
-{% block title %}<title>首页</title>{% endblock %}
-
-{% block main %}
+{% extends "base.html" %} {% block title %}
+<title>首页</title>{% endblock %} {% block main %}
 <link href="/static/css/index.css" rel="stylesheet">
 <script src="https://unpkg.com/currency.js@2.0.4/dist/currency.min.js"></script>
 
@@ -29,19 +27,29 @@
 
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">当前持仓
+                <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">当前持仓
                 </button>
                 <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">历史持仓
                 </button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div class="tab-pane" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">1</div>
+            <div class="tab-pane" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div v-for="p in currentStocks">
+                    <div class="td-text">{{p.name}} ({{p.code.toString().padStart(6,"0")}})</div>
+                    <div class="td-text">持仓数：{{p.shares}} &nbsp;&nbsp;&nbsp;&nbsp;盈亏：<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span></div>
+                    <div class="td-text"></div>
+                    <br>
+                </div>
+            </div>
+
             <div class="tab-pane show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                 <div v-for="p in clearedStocks">
-                    <div class="td-text">{{p.name}} ({{p.code}})</div>
-                    <div class="td-text">盈亏：<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span></div>
-                    <div class="td-text">{{p.endDate}}</div>
+                    <div class="td-text">{{p.name}} &nbsp;({{p.code}})</div>
+                    <div class="td-text">盈亏：&nbsp;<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span>
+                    </div>
+                    <div class="td-text">数据：&nbsp;{{p.containDays}}天{{p.count}}次({{p.startDate}}-{{p.endDate}})
+                    </div>
                     <br>
                 </div>
             </div>

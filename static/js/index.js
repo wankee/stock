@@ -5,6 +5,7 @@ let vm = new Vue({
     data: {
         trades: [],
         totalBalance: 0,
+        currentStocks: [],
         clearedStocks: []
     },
     methods: {
@@ -60,24 +61,46 @@ $.getJSON('/api/trades').done(function(data) {
         if (el === null) {
             el = {
                 code: row.code,
-                name: row.name
+                name: row.name,
+                startDate: row.date,
+                endDate: row.date,
+                containDays: 0,
+                shares: new Number(row.shares),
+                count: 0
             }
             result.push(el);
         }
 
-        el.startDate = row.date;
-        el.endDate = row.date;
+        let time = new Date(row.date).getTime()
+        let startTime = new Date(el.startDate).getTime()
+        let endTime = new Date(el.endDate).getTime()
+
+        if (time < startTime) el.startDate = row.date
+        if (time > endTime) el.endDate = row.date
+
+        el.containDays = (new Date(el.endDate).getTime() - new Date(el.startDate).getTime()) / (1000 * 3600 * 24)
+        el.shares += new Number(row.shares);
+        if (new Number(row.shares) != 0) el.count++;
         el.balance = currency(el.balance).add(row.balance).value;
         // el.history.push(row);
-
     }
     console.log(result);
+
     let sum = currency(0);
-    result.forEach(i => sum = sum.add(i.balance))
+    let current = []
+    let cleared = []
+    result.forEach(i => {
+        sum = sum.add(i.balance)
+        if (i.shares > 0) current.push(i)
+        else cleared.push(i)
+    })
     console.log(sum.value);
+    console.log(current);
+    console.log(cleared);
 
     vm.totalBalance = total;
-    vm.clearedStocks = result;
+    vm.currentStocks = current;
+    vm.clearedStocks = cleared;
 }).fail(function(jqXHR, textStatus) {
     alert('Error: ' + jqXHR.status);
 });
