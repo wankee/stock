@@ -1,3 +1,15 @@
+.item-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+.indicator {
+    width: 6px;
+    height: 64px;
+    border-radius: 3px;
+    margin-right: 10px;
+}
 
 .td-text {
     font-size: 1rem;

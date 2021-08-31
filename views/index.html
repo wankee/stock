@@ -44,13 +44,15 @@
             </div>
 
             <div class="tab-pane show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <div v-for="p in clearedStocks">
-                    <div class="td-text">{{p.name}} &nbsp;({{p.code}})</div>
-                    <div class="td-text">盈亏：&nbsp;<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span>
+                <div class="item-container" v-for="p in clearedStocks">
+                    <div class="indicator" :style="{background: p.balance > 0 ? 'red':'green'}"></div>
+                    <div>
+                        <div class="td-text">{{p.name}} &nbsp;({{p.code}})</div>
+                        <div class="td-text">盈亏：&nbsp;<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span>
+                        </div>
+                        <div class="td-text">数据：&nbsp;{{p.containDays}}天{{p.count}}次({{p.startDate}}-{{p.endDate}})
+                        </div>
                     </div>
-                    <div class="td-text">数据：&nbsp;{{p.containDays}}天{{p.count}}次({{p.startDate}}-{{p.endDate}})
-                    </div>
-                    <br>
                 </div>
             </div>
         </div>
