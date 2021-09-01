@@ -6,9 +6,13 @@ let vm = new Vue({
         trades: [],
         totalBalance: 0,
         currentStocks: [],
-        clearedStocks: []
+        clearedStocks: [],
+        stockHistory: []
     },
     methods: {
+        showDetail: function(data) {
+            this.stockHistory = data.history;
+        },
         deleteProduct: function(id) {
             let that = this;
             let reqId = id;
@@ -66,7 +70,8 @@ $.getJSON('/api/trades').done(function(data) {
                 endDate: row.date,
                 containDays: 0,
                 shares: new Number(row.shares),
-                count: 0
+                count: 0,
+                history: []
             }
             result.push(el);
         }
@@ -82,7 +87,7 @@ $.getJSON('/api/trades').done(function(data) {
         el.shares += new Number(row.shares);
         if (new Number(row.shares) != 0) el.count++;
         el.balance = currency(el.balance).add(row.balance).value;
-        // el.history.push(row);
+        el.history.push(row);
     }
     console.log(result);
 

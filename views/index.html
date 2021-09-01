@@ -44,16 +44,34 @@
             </div>
 
             <div class="tab-pane show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <div class="item-container" v-for="p in clearedStocks">
-                    <div class="indicator" :style="{background: p.balance > 0 ? 'red':'green'}"></div>
-                    <div>
-                        <div class="td-text">{{p.name}} &nbsp;({{p.code}})</div>
-                        <div class="td-text">盈亏：&nbsp;<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span>
+                <template v-if="stockHistory.length ===0">
+                    <div class="item-container" v-for="p in clearedStocks">
+                        <div class="indicator" :style="{background: p.balance > 0 ? 'red':'green'}"></div>
+                        <div>
+                            <div class="td-text">{{p.name}} &nbsp;({{p.code}})</div>
+                            <div class="td-text">盈亏：&nbsp;<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span>
+                            </div>
+                            <div class="td-text">数据：&nbsp;{{p.containDays}}天{{p.count}}次({{p.startDate}}-{{p.endDate}})
+                            </div>
                         </div>
-                        <div class="td-text">数据：&nbsp;{{p.containDays}}天{{p.count}}次({{p.startDate}}-{{p.endDate}})
+                        <button @click="showDetail(p)">明细</button>
+                    </div>
+                </template>
+                <template v-if="stockHistory.length !==0">
+                    <div class="item-container" v-for="p in stockHistory">
+                        <div class="indicator" :style="{background: p.balance > 0 ? 'red':'green'}"></div>
+                        <div>
+                            <div class="td-text">{{p.name}} &nbsp;({{p.code}})</div>
+                            <div class="td-text">价格：&nbsp;{{p.price}}  数量：{{p.shares}}</div>
+                            <div class="td-text">总价：&nbsp;{{p.balance}}</div>
+                            <div class="td-text">日期：&nbsp;{{p.date}}</div>
+                            <div class="td-text">盈亏：&nbsp;<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span>
+                            </div>
+                            
+                            
                         </div>
                     </div>
-                </div>
+                </template>
             </div>
         </div>
     </div>
