@@ -7,13 +7,35 @@ let vm = new Vue({
         totalBalance: 0,
         currentStocks: [],
         clearedStocks: [],
-        stockHistory: []
+        stockHistory: [],
+        activeTabIndex: 2
     },
     methods: {
-        showDetail: function(data) {
-            this.stockHistory = data.history;
+        selectTag: function (index) {
+            this.activeTabIndex = index
         },
-        deleteProduct: function(id) {
+
+        showDetail: function (data) {
+            this.stockHistory = data.history
+            this.activeTabIndex = 3
+
+            console.log(this.stockHistory[0].shares)
+            console.log(this.stockHistory[0].shares != 0)
+            console.log(this.stockHistory[1].shares)
+            console.log(this.stockHistory[1].shares != 0)
+            console.log(this.stockHistory[2].shares)
+            console.log(this.stockHistory[2].shares != 0)
+            console.log(this.stockHistory[3].shares)
+            console.log(this.stockHistory[3].shares != 0)
+            console.log(this.stockHistory[4].shares)
+            console.log(this.stockHistory[4].shares != 0)
+        },
+
+        getDateString: function (date) {
+            return moment(date).format('YYYY年MM月DD日')
+        },
+
+        deleteProduct: function (id) {
             let that = this;
             let reqId = id;
             // AJAX提交JSON:
@@ -21,7 +43,7 @@ let vm = new Vue({
                 type: 'delete',
                 dataType: 'json',
                 url: '/api/trades/' + id
-            }).done(function(r) {
+            }).done(function (r) {
                 console.log(r);
                 var i;
                 for (i = 0; i < that.trades.length; i++) {
@@ -30,7 +52,7 @@ let vm = new Vue({
                         return;
                     }
                 }
-            }).fail(function(jqXHR, textStatus) {
+            }).fail(function (jqXHR, textStatus) {
                 // Not 200:
                 alert('Error: ' + jqXHR.status);
             });
@@ -38,7 +60,7 @@ let vm = new Vue({
     }
 });
 
-$.getJSON('/api/trades').done(function(data) {
+$.getJSON('/api/trades').done(function (data) {
     vm.trades = data.trades;
     let total;
     let result = [];
@@ -106,7 +128,7 @@ $.getJSON('/api/trades').done(function(data) {
     vm.totalBalance = total;
     vm.currentStocks = current;
     vm.clearedStocks = cleared;
-}).fail(function(jqXHR, textStatus) {
+}).fail(function (jqXHR, textStatus) {
     alert('Error: ' + jqXHR.status);
 });
 
@@ -116,7 +138,7 @@ $.getJSON('/api/trades').done(function(data) {
 //     alert('Error: ' + jqXHR.status);
 // });
 
-$('#product-form').submit(function(e) {
+$('#product-form').submit(function (e) {
     e.preventDefault();
     var
         trade = {
@@ -131,10 +153,10 @@ $('#product-form').submit(function(e) {
         contentType: 'application/json',
         url: '/api/trades',
         data: JSON.stringify(trade)
-    }).done(function(r) {
+    }).done(function (r) {
         console.log(r);
         vm.trades.push(r);
-    }).fail(function(jqXHR, textStatus) {
+    }).fail(function (jqXHR, textStatus) {
         // Not 200:
         alert('Error: ' + jqXHR.status);
     });

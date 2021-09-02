@@ -4,6 +4,13 @@
     margin: 10px 0px;
 }
 
+.detail-item-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0px;
+
+}
+
 .indicator {
     width: 6px;
     height: 64px;
@@ -13,4 +20,25 @@
 
 .td-text {
     font-size: 1rem;
+}
+
+.flex-row-center-all {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-column-center-all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    color: white;
 }
