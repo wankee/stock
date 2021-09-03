@@ -55,21 +55,27 @@
             <template v-if="stockHistory.length !==0">
                 <div class="tab-pane" :class="{active:activeTabIndex===3}" id="nav-detail" role="tabpanel">
                     <div class="detail-item-container" v-for="p in stockHistory">
-                        <div class="flex-column-center-all me-3">
+                        <div class="detail-left flex-column-center-all">
                             <div class="detail-indicator flex-row-center-all"
                                  :style="{background: p.balance > 0 ? 'red':'green'}">
-                                <div>+</div>
+                                <div :style="{fontSize: p.balance > 0 ? 'medium':'small'}">{{p.balance > 0 ? "+":"─"}}
+                                </div>
                             </div>
-                            <hr class="mt-2 mb-0" style="width:1px;height:70px; "></hr>
+                            <hr class="mt-1 mb-0" style="width:1px;height:100%; ">
                         </div>
-                        <div style="display: flex;flex-direction: column;width: 100%;">
-                            <div>
-                                <div class="td-text">{{getDateString(p.date)}}</div>
-                                <div class="td-text" v-if="new Number(p.shares) != 0">价格：&nbsp;{{p.price}}</div>
-                                <div class="td-text" v-if="new Number(p.shares) != 0">数量：{{p.shares}}</div>
-                                <div class="td-text">成交金额：&nbsp;{{p.balance}}</div>
+                        <div class="detail-right">
+                            <div class="td-text ms-1 mt-1">{{getDateString(p.date)}}</div>
+                            <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
+                                {{new Number(p.shares)>0?"买入":"卖出"}}价格：&nbsp;{{p.price}}
                             </div>
-                            <hr>
+                            <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
+                                {{new Number(p.shares)>0?"买入":"卖出"}}数量：{{Math.abs(p.shares)}}
+                            </div>
+                            <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
+                                {{new Number(p.shares)>0?"买入":"卖出"}}数量：{{Math.abs(p.shares)}}
+                            </div>
+                            <div class="td-text ms-1">发生金额：&nbsp;{{p.balance}}</div>
+                            <hr class="mt-2 mb-2">
                         </div>
                     </div>
                 </div>

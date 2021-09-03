@@ -4,18 +4,39 @@
     margin: 10px 0px;
 }
 
-.detail-item-container {
-    display: flex;
-    align-items: center;
-    margin: 10px 0px;
-
-}
-
 .indicator {
     width: 6px;
     height: 64px;
     border-radius: 3px;
     margin-right: 10px;
+}
+
+.detail-item-container {
+    margin-top: 8px;
+    margin-bottom: 4px;
+    position: relative;
+    padding-left: 40px;
+}
+
+.detail-left {
+    width: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.detail-right {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.detail-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    color: white;
 }
 
 .td-text {
@@ -36,9 +57,4 @@
     justify-content: center;
 }
 
-.detail-indicator {
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    color: white;
-}
+

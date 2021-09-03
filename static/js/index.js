@@ -18,17 +18,6 @@ let vm = new Vue({
         showDetail: function (data) {
             this.stockHistory = data.history
             this.activeTabIndex = 3
-
-            console.log(this.stockHistory[0].shares)
-            console.log(this.stockHistory[0].shares != 0)
-            console.log(this.stockHistory[1].shares)
-            console.log(this.stockHistory[1].shares != 0)
-            console.log(this.stockHistory[2].shares)
-            console.log(this.stockHistory[2].shares != 0)
-            console.log(this.stockHistory[3].shares)
-            console.log(this.stockHistory[3].shares != 0)
-            console.log(this.stockHistory[4].shares)
-            console.log(this.stockHistory[4].shares != 0)
         },
 
         getDateString: function (date) {
