@@ -55,14 +55,17 @@
             <template v-if="stockHistory.length !==0">
                 <div class="tab-pane" :class="{active:activeTabIndex===3}" id="nav-detail" role="tabpanel">
                     <div class="detail-item-container" v-for="p in stockHistory">
+
                         <div class="detail-left flex-column-center-all">
                             <div class="detail-indicator flex-row-center-all"
                                  :style="{background: p.balance > 0 ? 'red':'green'}">
-                                <div :style="{fontSize: p.balance > 0 ? 'medium':'small'}">{{p.balance > 0 ? "+":"─"}}
+                                <div style="font-size: small">
+                                    {{p.balance > 0 ? "+":"-"}}
                                 </div>
                             </div>
-                            <hr class="mt-1 mb-0" style="width:1px;height:100%; ">
+                            <hr class="mt-1 mb-0" style="width:1px; flex: 1; ">
                         </div>
+
                         <div class="detail-right">
                             <div class="td-text ms-1 mt-1">{{getDateString(p.date)}}</div>
                             <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
