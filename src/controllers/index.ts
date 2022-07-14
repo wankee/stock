@@ -10,5 +10,8 @@ export = {
     },
     'GET /capital-detail.html': async (ctx, next) => {
         ctx.render('capital-detail.html');
+    },
+    'GET /ths-popular.html': async (ctx, next) => {
+        ctx.render('ths-popular.html');
     }
 };
