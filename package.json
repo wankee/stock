@@ -13,19 +13,22 @@
         "api"
     ],
     "dependencies": {
+        "axios": "^0.27.2",
         "csv": "^5.1.1",
         "koa": "^2.7.0",
         "koa-bodyparser": "^4.2.1",
         "koa-router": "^7.4.0",
         "mime": "^2.4.2",
+        "moment": "^2.29.4",
         "mysql2": "^2.2.5",
         "mz": "^2.7.0",
         "nunjucks": "^3.2.0",
         "sequelize": "^5.7.6"
     },
     "devDependencies": {
+        "del": "^6.1.1",
         "eslint": "^5.16.0",
-        "gulp": "^4.0.0",
+        "gulp": "^4.0.2",
         "gulp-typescript": "^5.0.1",
         "typescript": "^3.4.3"
     }

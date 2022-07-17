@@ -2,6 +2,8 @@ import rest = require('../rest');
 import Trade from '../models/Trade';
 import Fund from '../models/Fund';
 import Utils from '../utils';
+import fs = require('fs');
+
 function getFundHistory() {
     return Fund.findAll({
         attributes: ['date', 'amount', 'type'],
@@ -11,7 +13,7 @@ function getFundHistory() {
 
 function getTrades() {
     return Trade.findAll({
-        attributes: ['id','date', 'code', 'name', 'price', 'shares','balance'],
+        attributes: ['id', 'date', 'code', 'name', 'price', 'shares', 'balance'],
         order: [['date', 'DESC']]
     });
 }
@@ -96,5 +98,28 @@ module.exports = {
         } else {
             throw new rest.APIError('trade:not_found', 'trade not found by id.');
         }
-    }
+    },
+
+    'GET /api/thsdayhot': async (ctx, next) => {
+        let response = { "status_code": 0, "status_msg": "success", "data": {} };
+        try {
+            let lines = fs.readFileSync(__dirname + '/../../data/dayhot.txt', 'utf8').split('\n');
+            let res = new Array();
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i];
+                if (line === null || line.length === 0) continue;
+
+                let el = lines[i].split(':');
+                let item = [parseInt(el[0]), el[1]];
+                res.push(item);
+            }
+            response.data = res;
+        } catch (err) {
+            console.error(err);
+        };
+
+        ctx.rest(
+            response
+        );
+    },
 };
