@@ -58,7 +58,7 @@ function fetchData() {
         });
 }
 
-let interval = 60;
+let interval = 24 * 60;
 let tarminute = 30;
 function timeFunc() {
     let now = moment();
@@ -67,7 +67,7 @@ function timeFunc() {
 
     // let target = moment('01:30:00', 'HH:mm:ss');
     // let target = moment('00', 'ss');
-    let target = now.clone().minute(0).second(0).millisecond(0);
+    let target = now.clone().hour(14).minute(30).second(0).millisecond(0);
 
     console.log(target);
     console.log(target + '');
@@ -78,14 +78,19 @@ function timeFunc() {
     if (ms > -500 && ms < 500) {
         // tarminute = now.minute() - now.minute() % interval + interval;
         // if (tarminute >= 60) tarminute = 0;
-        timer = setTimeout(timeFunc, ms + interval * 60 * 1000);
+        target.add(1, 'day');
+        console.log('Trigger fetch,next trigger time:' + target.format('YYYY-MM-DD HH:mm:ss'));
+        timer = setTimeout(timeFunc, target.valueOf() - now.valueOf());
+        // timer = setTimeout(timeFunc, ms + interval * 60 * 1000);
         fetchData();
-    }
-    else {
+    } else {
         // tarminute = now.minute() - now.minute() % interval + interval;
         // if (tarminute >= 60) tarminute = 0;
         // target.minute(tarminute);
-        target.add(1, 'hour');
+        if (ms <= 500) {
+            target.add(1, 'day');
+        }
+
         console.log('next trigger time:' + target.format('YYYY-MM-DD HH:mm:ss'));
         timer = setTimeout(timeFunc, target.valueOf() - now.valueOf());
     }
