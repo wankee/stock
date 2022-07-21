@@ -26,8 +26,6 @@ $.getJSON('/api/thsdayhot').done(function (response) {
 
     console.log("length:" + dataLength);
     for (i; i < dataLength; i += 1) {
-        console.log(typeof data[i][1]);
-        console.log(typeof data[i][1].toFixed(2));
         ohlc.push([
             data[i][0], // the date
             parseFloat(data[i][1].toFixed(2)), // open
