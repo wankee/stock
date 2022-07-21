@@ -1,20 +1,16 @@
-$.getJSON('/api/thsdayhot').done(function (data) {
-    console.log(data);
-}).fail(function (jqXHR, textStatus) {
-    alert('Error: ' + jqXHR.status);
-});
 
 Highcharts.setOptions({
     lang: {
         rangeSelectorZoom: ''
     }
 });
-$.getJSON('https://data.jianshukeji.com/stock/history/000001', function (data) {
-    if (data.code !== 1) {
+
+$.getJSON('/api/thsdayhot').done(function (response) {
+    if (response.code !== 0) {
         alert('读取股票数据失败！');
         return false;
     }
-    data = data.data;
+    let data = response.data;
     var ohlc = [],
         volume = [],
         dataLength = data.length,
@@ -30,12 +26,14 @@ $.getJSON('https://data.jianshukeji.com/stock/history/000001', function (data) {
 
     console.log("length:" + dataLength);
     for (i; i < dataLength; i += 1) {
+        console.log(typeof data[i][1]);
+        console.log(typeof data[i][1].toFixed(2));
         ohlc.push([
             data[i][0], // the date
-            data[i][1], // open
-            data[i][2], // high
-            data[i][3], // low
-            data[i][4] // close
+            parseFloat(data[i][1].toFixed(2)), // open
+            parseFloat(data[i][2].toFixed(2)), // high
+            parseFloat(data[i][3].toFixed(2)), // low
+            parseFloat(data[i][4].toFixed(2)) // close
         ]);
         volume.push([
             data[i][0], // the date
@@ -119,4 +117,6 @@ $.getJSON('https://data.jianshukeji.com/stock/history/000001', function (data) {
             }
         }]
     });
+}).fail(function (jqXHR, textStatus) {
+    alert('Error: ' + jqXHR.status);
 });
