@@ -87,7 +87,7 @@ function timeFunc() {
         // tarminute = now.minute() - now.minute() % interval + interval;
         // if (tarminute >= 60) tarminute = 0;
         // target.minute(tarminute);
-        if (ms <= 500) {
+        if (ms <= -500) {
             target.add(1, 'day');
         }
 

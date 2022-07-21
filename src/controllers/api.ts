@@ -110,7 +110,8 @@ module.exports = {
                 if (line === null || line.length === 0) continue;
 
                 let el = lines[i].split(':');
-                let item = [parseInt(el[0]), el[1]];
+                let item = [parseInt(el[0]), JSON.parse(el[1])];
+                
                 res.push(item);
             }
             response.data = res;
