@@ -1,4 +1,3 @@
-
 Highcharts.setOptions({
     lang: {
         rangeSelectorZoom: ''
@@ -24,7 +23,7 @@ $.getJSON('/api/thsdayhot').done(function (response) {
         ]],
         i = 0;
 
-    console.log("length:" + dataLength);
+    console.log("Data length:" + dataLength);
     console.log(data);
     for (i; i < dataLength; i += 1) {
         ohlc.push([
