@@ -110,7 +110,7 @@ function saveTrendData(data: any, date: string, stockId: string) {
     );
 }
 
-function fetchTrendData(date: string, stockId: string) {
+function fetchHistoryTrend(date: string, stockId: string) {
     let param = new URLSearchParams();
     param.append('Day', date);
     param.append('StockID', stockId);
@@ -129,7 +129,30 @@ function fetchTrendData(date: string, stockId: string) {
             console.log('Response:' + response.status + "/" + response.statusText);
         }
     }).catch(error => {
-        console.log('Axios get stock data error:' + error);
+        console.log('Axios fetchHistoryTrend error:' + error);
+    });
+}
+
+function fetchTrendData(date: string, stockId: string) {
+    let code = stockId;
+    if (stockId.startsWith('60')) {
+        code = 'sh' + stockId;
+    } else {
+        code = 'sz' + stockId;
+    }
+
+    axios.get('https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=' + code).then(response => {
+        if (response.status === 200 && response.data !== null) {
+            // console.log('Response:' + response.status + "/" + response.statusText);
+            let date = response.data.data[code].data.date;
+            // console.log('Response:' + );
+            saveTrendData(response.data, date, stockId);
+
+        } else {
+            console.log('Response:' + response.status + "/" + response.statusText);
+        }
+    }).catch(error => {
+        console.log('Axios fetchTrendData error:' + error);
     });
 }
 
@@ -137,8 +160,8 @@ async function fetchData() {
     toFetchStocks = new Array();
     await fetchDayHot();
     await fetchHourHot();
-    console.log(toFetchStocks);
-
+    console.log('To fetch size:' + toFetchStocks.length);
+    // console.log(toFetchStocks);
     for (let i = 0; i < toFetchStocks.length; i++) {
         fetchTrendData(moment().format('YYYYMMDD'), toFetchStocks[i]);
     }
