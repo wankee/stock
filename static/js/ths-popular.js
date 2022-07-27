@@ -45,7 +45,7 @@ $.getJSON('/api/thsdayhot').done(function (response) {
             inputDateFormat: '%Y-%m-%d'
         },
         title: {
-            text: '平安银行历史股价'
+            text: '历史股价'
         },
         xAxis: {
             dateTimeLabelFormats: {

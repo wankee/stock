@@ -133,27 +133,48 @@ function fetchHistoryTrend(date: string, stockId: string) {
     });
 }
 
-function fetchTrendData(date: string, stockId: string) {
-    let code = stockId;
-    if (stockId.startsWith('60')) {
-        code = 'sh' + stockId;
-    } else {
-        code = 'sz' + stockId;
+function saveToFetchedStocks() {
+    let folder = __dirname + '/../data';
+    if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder, { recursive: true });
     }
 
-    axios.get('https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=' + code).then(response => {
-        if (response.status === 200 && response.data !== null) {
-            // console.log('Response:' + response.status + "/" + response.statusText);
-            let date = response.data.data[code].data.date;
-            // console.log('Response:' + );
-            saveTrendData(response.data, date, stockId);
-
-        } else {
-            console.log('Response:' + response.status + "/" + response.statusText);
+    let file = folder + '/list.txt';
+    let str = '';
+    if (!fs.existsSync(file)) {
+        console.log('List file not exist');
+        for (let j = 0; j < toFetchStocks.length; j++) {
+            let stock = toFetchStocks[j];
+            str += stock + '\n';
         }
-    }).catch(error => {
-        console.log('Axios fetchTrendData error:' + error);
-    });
+
+        fs.writeFile(file, str,
+            err => {
+                if (err) {
+                    console.log('saveToFetchedStocks error:' + err);
+                }
+            }
+        );
+    } else {
+        console.log('List file exist!');
+
+        let lines = fs.readFileSync(file, 'utf8').split('\n');
+
+        for (let j = 0; j < toFetchStocks.length; j++) {
+            let stock = toFetchStocks[j];
+            if (!lines.includes(stock)) {
+                str += stock + '\n';
+            }
+        }
+
+        fs.appendFile(file, str,
+            err => {
+                if (err) {
+                    console.log('save stock list error:' + err);
+                }
+            }
+        );
+    }
 }
 
 async function fetchData() {
@@ -162,9 +183,8 @@ async function fetchData() {
     await fetchHourHot();
     console.log('To fetch size:' + toFetchStocks.length);
     // console.log(toFetchStocks);
-    for (let i = 0; i < toFetchStocks.length; i++) {
-        fetchTrendData(moment().format('YYYYMMDD'), toFetchStocks[i]);
-    }
+
+    saveToFetchedStocks();
 }
 
 let timer = null;
@@ -173,25 +193,23 @@ function timeFunc() {
     console.log(now);
 
     // let target = moment('01:30:00', 'HH:mm:ss');
-    // let target = moment('00', 'ss');
     let target = now.clone().minute(30).second(0).millisecond(0);
-
     console.log(target);
 
     let ms = target.valueOf() - now.valueOf();
-    console.log('left time:' + ms);
+    console.log('Fetch popular left time:' + ms);
 
     if (ms > -200 && ms < 200) {
-        fetchData()
         target.add(1, 'hour');
-        console.log('Trigger fetch,next trigger time:' + target.format('YYYY-MM-DD HH:mm:ss'));
+        console.log('Trigger fetch popular,next trigger time:' + target.format('YYYY-MM-DD HH:mm:ss'));
         timer = setTimeout(timeFunc, target.valueOf() - moment().valueOf());
+        fetchData();
     } else {
         if (ms <= -200) {
             target.add(1, 'hour');
         }
 
-        console.log('next trigger time:' + target.format('YYYY-MM-DD HH:mm:ss'));
+        console.log('Next fetch popular time:' + target.format('YYYY-MM-DD HH:mm:ss'));
         timer = setTimeout(timeFunc, target.valueOf() - moment().valueOf());
     }
 };
