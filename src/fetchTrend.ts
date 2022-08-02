@@ -161,6 +161,8 @@ async function generatePopIndex(latestDate: string) {
                 indexOpen = indexPrice;
                 indexHigh = indexPrice;
                 indexLow = indexPrice;
+                indexHighTime = time;
+                indexLowTime = time;
             } else {
                 if (indexPrice > indexHigh) {
                     indexHigh = indexPrice;
