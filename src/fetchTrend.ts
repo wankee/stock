@@ -90,18 +90,17 @@ async function generatePopIndex(latestDate: string) {
     let str = getLastTradeDay(latestDate).format('YYYYMMDD');
     console.log("last trade date:" + str);
 
-    let preData;
+    let preClose = 1000;
     try {
-        preData = JSON.parse(fs.readFileSync(__dirname + '/../data/pop3/' + str + '.txt', 'utf8'));
+        let preData = JSON.parse(fs.readFileSync(__dirname + '/../data/pop3/' + str + '.txt', 'utf8'));
+        if (preData !== null && preData.close !== null) {
+            preClose = parseFloat(preData.close);
+        }
     } catch (err) {
         console.log('Get pre data error:' + err);
     }
 
-    let preClose = 1000;
-    if (preData !== null && preData.close !== null) {
-        preClose = parseFloat(preData.close);
-    }
-    console.log("preClose" + preClose);
+    console.log("preClose:" + preClose);
 
     let res = {
         "date": latestDate, "preClose": preClose, "open": 0, "high": 0, "low": 0, "close": 0,
@@ -292,4 +291,3 @@ function timeTick() {
 };
 timeTick();
 // fetchData();
-
