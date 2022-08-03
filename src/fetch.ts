@@ -192,7 +192,7 @@ async function fetchData() {
 /** 获取节假日 */
 function getTradeDay() {
     let now = moment();
-    if (now.hour() !== 1) return;
+    if (now.hour() !== 0) return;
 
     let year = now.year();
     let endYear = year + 1;
@@ -235,7 +235,6 @@ function timeFunc() {
     let now = moment();
     console.log(now);
 
-    // let target = moment('01:30:00', 'HH:mm:ss');
     let target = now.clone().minute(30).second(0).millisecond(0);
     console.log(target);
 
