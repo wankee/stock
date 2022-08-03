@@ -73,7 +73,7 @@ function getDayPopStocks(latestDate: string) {
     return stocks;
 }
 
-function getLastTradeDay(latestDate: string) {
+function getPreTradeDay(latestDate: string) {
     return moment(latestDate, "YYYYMMDD").subtract(1, 'days');
 };
 
@@ -87,7 +87,7 @@ async function generatePopIndex(latestDate: string) {
     let max = 3;
     let count = stocks.length >= max ? max : stocks.length;
     // let preclose = 1000;
-    let str = getLastTradeDay(latestDate).format('YYYYMMDD');
+    let str = getPreTradeDay(latestDate).format('YYYYMMDD');
     console.log("last trade date:" + str);
 
     let preClose = 1000;

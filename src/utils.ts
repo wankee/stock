@@ -1,3 +1,4 @@
+import moment = require("moment");
 export default class Utils {
 
     public static getObjectClass(obj): any {
@@ -9,5 +10,9 @@ export default class Utils {
         }
 
         return undefined;
+    };
+
+    public static shortDay(date: string | number): moment.Moment {
+        return moment(date, 'YYYYMMDD');
     };
 }
