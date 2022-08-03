@@ -192,7 +192,7 @@ async function fetchData() {
 /** 获取节假日 */
 function getTradeDay() {
     let now = moment();
-    if (now.hour() !== 1 || now.minute() !== 0) return;
+    if (now.hour() !== 1) return;
 
     let year = now.year();
     let start = Utils.shortDay(year + '0101').unix();
@@ -211,6 +211,7 @@ function getTradeDay() {
                         str += info.start.substring(0, 10) + ' ' + info.description + '\n';
                     }
                 }
+                console.log(str);
 
                 let folder = path.join(__dirname, '../data/holidays');
                 if (!fs.existsSync(folder)) {
@@ -222,9 +223,8 @@ function getTradeDay() {
                 console.log('Response:' + response.status + "/" + response.statusText);
             }
         }).catch(error => {
-            console.log('Axios get day hot error:' + error);
+            console.log('Axios get trade day error:' + error);
         });
-
 }
 
 let timer = null;
