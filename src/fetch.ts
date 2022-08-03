@@ -195,8 +195,9 @@ function getTradeDay() {
     if (now.hour() !== 1) return;
 
     let year = now.year();
+    let endYear = year + 1;
     let start = Utils.shortDay(year + '0101').unix();
-    let end = Utils.shortDay((year + 1) + '0101').unix();
+    let end = Utils.shortDay(endYear + '0101').unix();
 
     let url = 'https://www.jisilu.cn/data/calendar/get_calendar_data/?qtype=OTHER&start=' + start + '&end=' + end;
     // console.log(url);
@@ -208,7 +209,9 @@ function getTradeDay() {
                 for (let i = 0; i < data.length; i++) {
                     let info = data[i];
                     if (info.title !== null && info.title.includes('A股休市')) {
-                        str += info.start.substring(0, 10) + ' ' + info.description + '\n';
+                        if (info.start.startsWith(year)) {
+                            str += info.start.substring(0, 10) + ' ' + info.description + '\n';
+                        }
                     }
                 }
                 console.log(str);
