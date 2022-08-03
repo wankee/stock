@@ -1,6 +1,8 @@
 import fs = require('fs');
 import moment = require('moment');
+import Utils from './utils';
 const axios = require('axios');
+const path = require("path")
 
 function saveOrignData(folder: string, time: moment.Moment, data: any) {
     if (!fs.existsSync(folder)) {
@@ -187,6 +189,44 @@ async function fetchData() {
     saveToFetchedStocks();
 }
 
+/** 获取节假日 */
+function getTradeDay() {
+    let now = moment();
+    if (now.hour() !== 1 || now.minute() !== 0) return;
+
+    let year = now.year();
+    let start = Utils.shortDay(year + '0101').unix();
+    let end = Utils.shortDay((year + 1) + '0101').unix();
+
+    let url = 'https://www.jisilu.cn/data/calendar/get_calendar_data/?qtype=OTHER&start=' + start + '&end=' + end;
+    // console.log(url);
+    axios.get(url)
+        .then(response => {
+            if (response.status === 200 && response.data !== null) {
+                let data = response.data;
+                let str = '';
+                for (let i = 0; i < data.length; i++) {
+                    let info = data[i];
+                    if (info.title !== null && info.title.includes('A股休市')) {
+                        str += info.start.substring(0, 10) + ' ' + info.description + '\n';
+                    }
+                }
+
+                let folder = path.join(__dirname, '../data/holidays');
+                if (!fs.existsSync(folder)) {
+                    fs.mkdirSync(folder, { recursive: true });
+                }
+
+                fs.writeFileSync(folder + '/' + year + '.txt', str);
+            } else {
+                console.log('Response:' + response.status + "/" + response.statusText);
+            }
+        }).catch(error => {
+            console.log('Axios get day hot error:' + error);
+        });
+
+}
+
 let timer = null;
 function timeFunc() {
     let now = moment();
@@ -203,6 +243,7 @@ function timeFunc() {
         target.add(1, 'hour');
         console.log('Trigger fetch popular,next trigger time:' + target.format('YYYY-MM-DD HH:mm:ss'));
         timer = setTimeout(timeFunc, target.valueOf() - moment().valueOf());
+        getTradeDay();
         fetchData();
     } else {
         if (ms <= -200) {
