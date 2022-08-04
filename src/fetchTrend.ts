@@ -73,45 +73,11 @@ function getDayPopStocks(latestDate: string) {
     return stocks;
 }
 
-/** 获取前一个交易日期 */
-function preTradeDay(latestDate: string): string {
-    let mo = Utils.shortDay(latestDate);
-    let year = mo.year();
-
-    let pre = mo.subtract(1, 'days');
-    // console.log('--------------');
-    // console.log(pre);
-
-    let isHoliday = false;
-
-    if (pre.isoWeekday() === 6 || pre.isoWeekday() === 7) {
-        isHoliday = true;
-    } else {
-        let lines = fs.readFileSync(__dirname + '/../data/holidays/' + year + '.txt', 'utf8').split('\n');
-        // console.log(lines);
-
-        for (let i = 0; i < lines.length; i++) {
-            let str = lines[i].split(' ');
-            if (pre.isSame(str[0], 'day')) {
-                isHoliday = true;
-                // console.log(str);
-                // console.log('is holiday');
-                break;
-            }
-        }
-    }
-
-    if (isHoliday) {
-        return preTradeDay(Utils.shortDayStr(pre));
-    } else {
-        return Utils.shortDayStr(mo);
-    }
-};
-
 async function generatePopIndex(latestDate: string) {
     console.log('Generate PopIndex:' + latestDate);
 
-    let preDate = preTradeDay(latestDate);
+    let preDate = Utils.preTradeDay(latestDate);
+    console.log("Previous trade date:" + preDate);
 
     let stocks = getDayPopStocks(preDate);
     if (stocks === null || stocks.length === 0) return;
@@ -119,11 +85,8 @@ async function generatePopIndex(latestDate: string) {
 
     let max = 3;
     let count = stocks.length >= max ? max : stocks.length;
-    // let preclose = 1000;
-
-    console.log("last trade date:" + preDate);
-
     let preClose = 1000;
+
     try {
         let preData = JSON.parse(fs.readFileSync(__dirname + '/../data/pop3/' + preDate + '.txt', 'utf8'));
         if (preData !== null && preData.close !== null) {
@@ -279,7 +242,6 @@ async function fetchData() {
                 // console.log('before save data:' + moment().valueOf());
                 saveTrendData(resData, date, lines[j]);
                 // console.log('after save data:' + moment().valueOf());
-                // console.log('trends:' + trends.length);
             } else {
                 console.log('Response:' + response.status + "/" + response.statusText);
             }
@@ -318,8 +280,5 @@ function timeTick() {
         timer = setTimeout(timeTick, target.valueOf() - moment().valueOf());
     }
 };
-generatePopIndex('20220801');
-generatePopIndex('20220802');
-generatePopIndex('20220803');
-generatePopIndex('20220804');
+
 timeTick();

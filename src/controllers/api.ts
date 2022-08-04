@@ -106,91 +106,24 @@ module.exports = {
     'GET /api/thsdayhot': async (ctx, next) => {
         let response = { "code": 0, "message": "success", "data": {} };
         try {
-            let lines = fs.readFileSync(__dirname + '/../../data/dayhot.txt', 'utf8').split('\n');
+            let start = '20220801';
             let res = new Array();
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i];
-                if (line === null || line.length === 0) continue;
 
-                let el = lines[i].split(':');
-                let time = el[0];
-                let date = el[0].substring(0, 8);
-                let stocks = JSON.parse(el[1]);
-
-                let max = 3;
-                let count = stocks.length >= max ? max : stocks.length;
-
-                let requests = new Array();
-                for (let j = 0; j < count; j++) {
-                    let stock = stocks[j];
-
-                    let param = new URLSearchParams();
-                    param.append('Day', date);
-                    param.append('StockID', stock[1]);
-                    param.append('a', 'GetStockTrend');
-                    param.append('c', 'StockL2History');
-                    // data.append('DeviceID', '3f5e28db1fbb51605ea65a9db9cfdb1054295463');
-                    // data.append('PhoneOSNew', '2');
-                    // data.append('Token', '0');
-                    // data.append('UserID', '0');
-                    // data.append('VerSion', '5.6.0.3');
-                    // data.append('apiv', 'w30');
-                    requests.push(axios.post('https://apphis.longhuvip.com/w1/api/index.php', param, {
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                    }));
-                }
-
-                await axios.all(requests).then(results => {
-
-                    let openPercent = 0;
-                    let closePercent = 0;
-
-                    for (let k = 0; k < results.length; k++) {
-                        let result = results[k];
-                        if (result.status === 200 && result.data !== null) {
-                            let trends = result.data;
-
-                            if (trends.trend) {
-                                console.log('===>' + trends.day + ' ' + trends.code + '\nopen:' + trends.begin_px + ' preclose:' + trends.preclose_px);
-                                let op = trends.begin_px / trends.preclose_px - 1;
-                                // console.log('open percent:' + op);
-                                openPercent += op;
-                                // console.log('开盘涨幅:' + openPercent);
-
-
-                                let trend = trends.trend;
-                                // console.log('close:' + trend[trend.length - 1][1]);
-                                let cp = trend[trend.length - 1][1] / trends.preclose_px - 1;
-                                // console.log('close percent:' + cp);
-
-                                closePercent += cp;
-                                // console.log('收盘涨幅:' + closePercent);
-
-
-                            } else {
-                                console.log('Data does not exist, maybe it is holiday');
-                            }
-                        } else {
-                            console.log('Response:' + result.status + "/" + result.statusText);
-                        }
-                    };
-                    let open = 1000 * (1 + openPercent / results.length);
-                    let close = 1000 * (1 + closePercent / results.length);
-                    let high = open > close ? open : close;
-                    let low = open > close ? close : open;
-                    // console.log('开盘百分比：' + openPercent / results.length);
-                    // console.log('收盘百分比：' + closePercent / results.length);
-
-
-                    let item = [moment(date).hour(15).valueOf(), open, high, low, close, 100000];
-                    // console.log(item);
-
+            // let files=fs.readdirSync(__dirname + '/../../data/pop3');
+            fs.readdirSync(__dirname + '/../../data/pop3')
+                .filter((f: string) => {
+                    return f.endsWith('.txt');
+                })
+                .forEach((f: string) => {
+                    console.log('file:' + f);
+                    let data = JSON.parse(fs.readFileSync(__dirname + '/../../data/pop3/' + f, 'utf8'));
+                    let open = data.open;
+                    let close = data.close;
+                    let high = data.high;
+                    let low = data.low;
+                    let item = [Utils.shortDay(data.date).hour(15).valueOf(), open, high, low, close, 100000];
                     res.push(item);
-
-                }).catch(err => {
-                    console.log(err);
                 });
-            }
 
             response.data = res;
         } catch (err) {

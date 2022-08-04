@@ -45,7 +45,7 @@ $.getJSON('/api/thsdayhot').done(function (response) {
             inputDateFormat: '%Y-%m-%d'
         },
         title: {
-            text: '历史股价'
+            text: '热门前三'
         },
         xAxis: {
             dateTimeLabelFormats: {
@@ -91,7 +91,7 @@ $.getJSON('/api/thsdayhot').done(function (response) {
         }],
         series: [{
             type: 'candlestick',
-            name: '平安银行',
+            name: '热门前三',
             color: 'green',
             lineColor: 'green',
             upColor: 'red',
