@@ -1,5 +1,6 @@
 import fs = require('fs');
 import moment = require('moment');
+import Utils from './utils';
 const axios = require('axios');
 const path = require("path")
 /** 保存分时数据 */
@@ -50,7 +51,7 @@ function generateTrendDataRequest(stockId: string) {
 }
 
 function getDayPopStocks(latestDate: string) {
-    let stocks;
+    let stocks = null;
     let lines = fs.readFileSync(__dirname + '/../data/dayhot/popular.txt', 'utf8').split('\n');
 
     for (let i = 0; i < lines.length; i++) {
@@ -70,29 +71,63 @@ function getDayPopStocks(latestDate: string) {
 
         // stocks = JSON.parse(el[1]);
     }
+    if (stocks == null) return new Array();
     return stocks;
 }
 
-function getPreTradeDay(latestDate: string) {
-    return moment(latestDate, "YYYYMMDD").subtract(1, 'days');
+/** 获取前一个交易日期 */
+function preTradeDay(latestDate: string): string {
+    let mo = Utils.shortDay(latestDate);
+    let year = mo.year();
+
+    let pre = mo.subtract(1, 'days');
+    // console.log('--------------');
+    // console.log(pre);
+
+    let isHoliday = false;
+
+    if (pre.isoWeekday() === 6 || pre.isoWeekday() === 7) {
+        isHoliday = true;
+    } else {
+        let lines = fs.readFileSync(__dirname + '/../data/holidays/' + year + '.txt', 'utf8').split('\n');
+        // console.log(lines);
+
+        for (let i = 0; i < lines.length; i++) {
+            let str = lines[i].split(' ');
+            if (pre.isSame(str[0], 'day')) {
+                isHoliday = true;
+                // console.log(str);
+                // console.log('is holiday');
+                break;
+            }
+        }
+    }
+
+    if (isHoliday) {
+        return preTradeDay(Utils.shortDayStr(pre));
+    } else {
+        return Utils.shortDayStr(mo);
+    }
 };
 
 async function generatePopIndex(latestDate: string) {
     console.log('Generate PopIndex:' + latestDate);
 
-    let stocks = getDayPopStocks(latestDate);
+    let preDate = preTradeDay(latestDate);
+
+    let stocks = getDayPopStocks(preDate);
     if (stocks === null || stocks.length === 0) return;
     // console.log(stocks);
 
     let max = 3;
     let count = stocks.length >= max ? max : stocks.length;
     // let preclose = 1000;
-    let str = getPreTradeDay(latestDate).format('YYYYMMDD');
-    console.log("last trade date:" + str);
+
+    console.log("last trade date:" + preDate);
 
     let preClose = 1000;
     try {
-        let preData = JSON.parse(fs.readFileSync(__dirname + '/../data/pop3/' + str + '.txt', 'utf8'));
+        let preData = JSON.parse(fs.readFileSync(__dirname + '/../data/pop3/' + preDate + '.txt', 'utf8'));
         if (preData !== null && preData.close !== null) {
             preClose = parseFloat(preData.close);
         }
@@ -187,7 +222,7 @@ async function generatePopIndex(latestDate: string) {
             }
         }
         console.log('open:' + indexOpen + ' high:' + indexHigh + ' low:' + indexLow + ' close:' + indexClose);
-        console.log('highTime:' + indexHighTime + ' targetLowTime:' + indexLowTime);
+        console.log('highTime:' + indexHighTime + ' lowTime:' + indexLowTime);
 
         res.trend = indexTrends;
         res.open = parseFloat(indexOpen.toFixed(2));
@@ -211,7 +246,7 @@ async function generatePopIndex(latestDate: string) {
 async function fetchData() {
     let lines = fs.readFileSync(__dirname + '/../data/list.txt', 'utf8').split('\n');
 
-    console.log('To fetch size:' + lines.length);
+    console.log('Total popular size:' + lines.length);
     // console.log(lines);
     // console.log('Before ' + moment().valueOf());
 
@@ -291,5 +326,8 @@ function timeTick() {
         timer = setTimeout(timeTick, target.valueOf() - moment().valueOf());
     }
 };
+generatePopIndex('20220802');
+generatePopIndex('20220803');
+generatePopIndex('20220804');
 timeTick();
 // fetchData();

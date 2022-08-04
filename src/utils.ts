@@ -1,4 +1,6 @@
+import { Moment } from "moment";
 import moment = require("moment");
+
 export default class Utils {
 
     public static getObjectClass(obj): any {
@@ -12,7 +14,21 @@ export default class Utils {
         return undefined;
     };
 
-    public static shortDay(date: string | number): moment.Moment {
+    /**
+     * 将string或者number转化成Moment
+     * @param date 
+     * @returns Moment
+     */
+    public static shortDay(date: string | number): Moment {
         return moment(date, 'YYYYMMDD');
+    };
+
+    /**
+     * 将moment转化成string
+     * @param moment 
+     * @returns 
+     */
+    public static shortDayStr(moment: Moment): string {
+        return moment.format('YYYYMMDD');
     };
 }

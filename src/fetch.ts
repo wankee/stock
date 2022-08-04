@@ -183,9 +183,8 @@ async function fetchData() {
     toFetchStocks = new Array();
     await fetchDayHot();
     await fetchHourHot();
-    console.log('To fetch size:' + toFetchStocks.length);
+    console.log('Day and hour hot size:' + toFetchStocks.length);
     // console.log(toFetchStocks);
-
     saveToFetchedStocks();
 }
 
@@ -206,11 +205,17 @@ function getTradeDay() {
             if (response.status === 200 && response.data !== null) {
                 let data = response.data;
                 let str = '';
+                let tem = new Array()
+
                 for (let i = 0; i < data.length; i++) {
                     let info = data[i];
                     if (info.title !== null && info.title.includes('A股休市')) {
                         if (info.start.startsWith(year)) {
-                            str += info.start.substring(0, 10) + ' ' + info.description + '\n';
+                            let s = info.start.substring(0, 10) + ' ' + info.description;
+                            if (!tem.includes(s)) {
+                                tem.push(s);
+                                str += s + '\n';
+                            }
                         }
                     }
                 }
