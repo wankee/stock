@@ -123,7 +123,6 @@ function fetchHistoryTrend(date: string, stockId: string) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then(response => {
         if (response.status === 200 && response.data !== null) {
-            // console.log('Response:' + response.status + "/" + response.statusText);
             // console.log('Response:' + response.data.code);
             saveTrendData(response.data, date, stockId);
 
@@ -191,7 +190,7 @@ async function fetchData() {
 /** 获取节假日 */
 function getTradeDay() {
     let now = moment();
-    if (now.hour() !== 0) return;
+    // if (now.hour() !== 0) return;
 
     let year = now.year();
     let endYear = year + 1;
@@ -261,5 +260,5 @@ function timeFunc() {
         timer = setTimeout(timeFunc, target.valueOf() - moment().valueOf());
     }
 };
+getTradeDay();
 timeFunc();
-// fetchData();

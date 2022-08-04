@@ -24,7 +24,6 @@ function fetchHistoryTrend(date: string, stockId: string) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then(response => {
         if (response.status === 200 && response.data !== null) {
-            // console.log('Response:' + response.status + "/" + response.statusText);
             // console.log('Response:' + response.data.code);
             saveTrendData(response.data, date, stockId);
 
@@ -67,9 +66,6 @@ function getDayPopStocks(latestDate: string) {
         if (mom.format('HHmmss') === '143000') {
             stocks = JSON.parse(el[1]);
         }
-        // console.log('i:' + i + ' time:' + el[0]);
-
-        // stocks = JSON.parse(el[1]);
     }
     if (stocks == null) return new Array();
     return stocks;
@@ -153,7 +149,6 @@ async function generatePopIndex(latestDate: string) {
 
         // console.log('before read==>' + moment().valueOf());
         let trendsData = fs.readFileSync(fileName, 'utf8');
-        // console.log(data);
         // console.log(trendsData.length);
         // console.log('after read==>' + moment().valueOf());
 
@@ -231,7 +226,6 @@ async function generatePopIndex(latestDate: string) {
         res.close = parseFloat(indexClose.toFixed(2));
         res.highTime = indexHighTime;
         res.lowTime = indexLowTime;
-        // });
     }
 
     let folder = path.join(__dirname, '/../data/pop3')
@@ -240,7 +234,6 @@ async function generatePopIndex(latestDate: string) {
     }
 
     fs.writeFileSync(folder + '/' + latestDate + '.txt', JSON.stringify(res));
-    // response.data = res;
 }
 
 async function fetchData() {
@@ -304,7 +297,6 @@ function timeTick() {
     let now = moment();
     console.log(now);
 
-    // let target = moment('01:30:00', 'HH:mm:ss');
     let target = now.clone().hour(15).minute(31).second(0).millisecond(0);
 
     console.log(target);
@@ -326,8 +318,7 @@ function timeTick() {
         timer = setTimeout(timeTick, target.valueOf() - moment().valueOf());
     }
 };
-generatePopIndex('20220802');
-generatePopIndex('20220803');
-generatePopIndex('20220804');
+// generatePopIndex('20220802');
+// generatePopIndex('20220803');
+// generatePopIndex('20220804');
 timeTick();
-// fetchData();
