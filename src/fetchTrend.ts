@@ -3,6 +3,7 @@ import moment = require('moment');
 import Utils from './utils';
 const axios = require('axios');
 const path = require("path")
+
 /** 保存分时数据 */
 function saveTrendData(data: any, date: string, stockId: string) {
     let folder = __dirname + '/../fetched/trend/' + stockId;
@@ -44,6 +45,7 @@ function getCode(stockId: string): string {
     }
     return code;
 }
+
 function generateTrendDataRequest(stockId: string) {
     console.log('fetch before ' + moment().valueOf());
     return axios.get('https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=' + stockId);
@@ -137,10 +139,9 @@ async function generatePopIndex(latestDate: string) {
         "date": latestDate, "preClose": preClose, "open": 0, "high": 0, "low": 0, "close": 0,
         "highTime": '0930', "lowTime": '0930', "trend": []
     };
-    // res.trend = new Array();
+
     for (let j = 0; j < count; j++) {
         // console.log('j:' + j);
-
         let stock = stocks[j];
         console.log(stock);
 
@@ -151,7 +152,6 @@ async function generatePopIndex(latestDate: string) {
         let trendsData = fs.readFileSync(fileName, 'utf8');
         // console.log(trendsData.length);
         // console.log('after read==>' + moment().valueOf());
-
         console.log('=====>' + stock[1] + ' ' + latestDate);
 
         let code = getCode(stock[1]);
@@ -318,7 +318,8 @@ function timeTick() {
         timer = setTimeout(timeTick, target.valueOf() - moment().valueOf());
     }
 };
-// generatePopIndex('20220802');
-// generatePopIndex('20220803');
-// generatePopIndex('20220804');
+generatePopIndex('20220801');
+generatePopIndex('20220802');
+generatePopIndex('20220803');
+generatePopIndex('20220804');
 timeTick();

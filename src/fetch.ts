@@ -34,7 +34,7 @@ function saveFormatData(folder: string, data: string) {
     );
 }
 
-let toFetchStocks = new Array();
+let popularStocks = new Array();
 let minOrder = 20;
 
 /** 保存热门数据 */
@@ -51,8 +51,8 @@ function savePopularData(data: any, type: string) {
             res.push(item);
 
             if (i < minOrder) {
-                if (toFetchStocks.indexOf(stock.code) === -1) {
-                    toFetchStocks.push(stock.code);
+                if (popularStocks.indexOf(stock.code) === -1) {
+                    popularStocks.push(stock.code);
                 }
             }
         }
@@ -134,7 +134,7 @@ function fetchHistoryTrend(date: string, stockId: string) {
     });
 }
 
-function saveToFetchedStocks() {
+function savePopularStocks() {
     let folder = __dirname + '/../data';
     if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder, { recursive: true });
@@ -144,15 +144,15 @@ function saveToFetchedStocks() {
     let str = '';
     if (!fs.existsSync(file)) {
         console.log('List file not exist');
-        for (let j = 0; j < toFetchStocks.length; j++) {
-            let stock = toFetchStocks[j];
+        for (let j = 0; j < popularStocks.length; j++) {
+            let stock = popularStocks[j];
             str += stock + '\n';
         }
 
         fs.writeFile(file, str,
             err => {
                 if (err) {
-                    console.log('saveToFetchedStocks error:' + err);
+                    console.log('savePopularStocks error:' + err);
                 }
             }
         );
@@ -161,8 +161,8 @@ function saveToFetchedStocks() {
 
         let lines = fs.readFileSync(file, 'utf8').split('\n');
 
-        for (let j = 0; j < toFetchStocks.length; j++) {
-            let stock = toFetchStocks[j];
+        for (let j = 0; j < popularStocks.length; j++) {
+            let stock = popularStocks[j];
             if (!lines.includes(stock)) {
                 str += stock + '\n';
             }
@@ -179,18 +179,18 @@ function saveToFetchedStocks() {
 }
 
 async function fetchData() {
-    toFetchStocks = new Array();
+    popularStocks = new Array();
     await fetchDayHot();
     await fetchHourHot();
-    console.log('Day and hour hot size:' + toFetchStocks.length);
+    console.log('Popular stock size:' + popularStocks.length);
     // console.log(toFetchStocks);
-    saveToFetchedStocks();
+    savePopularStocks();
 }
 
 /** 获取节假日 */
 function getTradeDay() {
     let now = moment();
-    // if (now.hour() !== 0) return;
+    if (now.hour() !== 0) return;
 
     let year = now.year();
     let endYear = year + 1;
@@ -260,5 +260,4 @@ function timeFunc() {
         timer = setTimeout(timeFunc, target.valueOf() - moment().valueOf());
     }
 };
-getTradeDay();
 timeFunc();
