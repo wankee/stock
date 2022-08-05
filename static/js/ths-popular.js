@@ -4,7 +4,11 @@ Highcharts.setOptions({
     }
 });
 
-$.getJSON('/api/thsdayhot').done(function (response) {
+let querystr = window.location.href.split('?')[1];
+let urlSearch = new URLSearchParams('?' + querystr);
+let pop = parseInt(urlSearch.get('pop'));
+console.log(pop);
+$.getJSON('/api/thsdayhot?pop=' + pop).done(function (response) {
     if (response.code !== 0) {
         alert('读取股票数据失败！');
         return false;

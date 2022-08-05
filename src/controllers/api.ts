@@ -103,19 +103,24 @@ module.exports = {
         }
     },
 
+
     'GET /api/thsdayhot': async (ctx, next) => {
+        console.log(ctx.query.pop);
+        console.log(ctx.querystring);
+        
         let response = { "code": 0, "message": "success", "data": {} };
         try {
-            let start = '20220801';
             let res = new Array();
 
             // let files=fs.readdirSync(__dirname + '/../../data/pop3');
+            let cur = moment().valueOf();
+            console.log('before get thsdayhot:' + cur);
             fs.readdirSync(__dirname + '/../../data/pop3')
                 .filter((f: string) => {
                     return f.endsWith('.txt');
                 })
                 .forEach((f: string) => {
-                    console.log('file:' + f);
+                    // console.log('file:' + f);
                     let data = JSON.parse(fs.readFileSync(__dirname + '/../../data/pop3/' + f, 'utf8'));
                     let open = data.open;
                     let close = data.close;
@@ -124,6 +129,7 @@ module.exports = {
                     let item = [Utils.shortDay(data.date).hour(15).valueOf(), open, high, low, close, 100000];
                     res.push(item);
                 });
+            console.log('end get thsdayhot, used time:' + (moment().valueOf() - cur));
 
             response.data = res;
         } catch (err) {
