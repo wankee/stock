@@ -13,5 +13,8 @@ export = {
     },
     'GET /ths-popular.html': async (ctx, next) => {
         ctx.render('ths-popular.html');
+    },
+    'GET /backtest.html': async (ctx, next) => {
+        ctx.render('backtest.html');
     }
 };

@@ -33,55 +33,98 @@ export default class Utils {
         return moment.format('YYYYMMDD');
     };
 
-    /** 获取前一个交易日期 */
-    public static findTradeDay(date: string, mode: string): string {
-        let mo = Utils.shortDay(date);
-        let year = mo.year();
+    public static isTradingDay(date: string | Moment): boolean {
+        let mo: Moment;
 
-        if (mode === 'next') {
-            mo.add(1, 'days');
+        if (typeof (date) === 'string') {
+            mo = Utils.shortDay(date);
         } else {
-            mo.subtract(1, 'days');
+            mo = date;
         }
 
-        // console.log('--------------');
-        // console.log(pre);
-
-        let isHoliday = false;
-
+        let isOpen = true;
         if (mo.isoWeekday() === 6 || mo.isoWeekday() === 7) {
-            isHoliday = true;
+            isOpen = false;
         } else {
             try {
-                let lines = fs.readFileSync(__dirname + '/../data/holidays/' + year + '.txt', 'utf8').split('\n');
+                let lines = fs.readFileSync(__dirname + '/../data/holidays/' + mo.year() + '.txt', 'utf8').split('\n');
                 // console.log(lines);
 
                 for (let i = 0; i < lines.length; i++) {
                     let str = lines[i].split(' ');
                     if (mo.isSame(str[0], 'day')) {
-                        isHoliday = true;
+                        isOpen = false;
                         // console.log(str);
                         // console.log('is holiday');
                         break;
                     }
                 }
             } catch (err) {
-                console.log("Error:" + err);
+                console.log("isTradingDay Error:" + err);
             }
         }
+        return isOpen;
+    }
 
-        if (isHoliday) {
-            return Utils.findTradeDay(Utils.shortDayStr(mo), mode);
-        } else {
-            return Utils.shortDayStr(mo);
-        }
-    };
 
+    /** 获取前一个交易日期 */
     public static preTradeDay(date: string): string {
-        return this.findTradeDay(date, 'pre')
+        let preDay = Utils.shortDay(date).subtract(1, 'days');
+        // console.log('--------------');
+        // console.log(pre);
+        let dateStr = Utils.shortDayStr(preDay);
+
+        if (this.isTradingDay(dateStr)) {
+            return dateStr;
+        } else {
+            return Utils.preTradeDay(dateStr);
+
+        }
     }
 
     public static nextTradeDay(date: string): string {
-        return this.findTradeDay(date, 'next');
+        let nextDay = Utils.shortDay(date).add(1, 'days');
+        // console.log('--------------');
+        // console.log(pre);
+
+        let dateStr = Utils.shortDayStr(nextDay);
+
+        if (this.isTradingDay(dateStr)) {
+            return dateStr;
+        } else {
+            return Utils.nextTradeDay(dateStr);
+        }
+    }
+
+    public static getDayPopStocks(latestDate: string) {
+        let stocks = null;
+        let lines = fs.readFileSync(__dirname + '/../data/dayhot/popular.txt', 'utf8').split('\n');
+
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+            if (line === null || line.length === 0) continue;
+
+            let el = lines[i].split(':');
+            let time = el[0];
+            let date = time.substring(0, 8);
+            if (latestDate !== date) continue;
+
+            let mom = moment(time, 'YYYYMMDDHHmmss');
+            if (mom.format('HHmmss') === '143000') {
+                stocks = JSON.parse(el[1]);
+            }
+        }
+        if (stocks == null) return new Array();
+        return stocks;
+    }
+
+    public static getCode(stockId: string): string {
+        let code = stockId;
+        if (stockId.startsWith('60')) {
+            code = 'sh' + stockId;
+        } else {
+            code = 'sz' + stockId;
+        }
+        return code;
     }
 }

@@ -36,41 +36,9 @@ function fetchHistoryTrend(date: string, stockId: string) {
     });
 }
 
-function getCode(stockId: string): string {
-    let code = stockId;
-    if (stockId.startsWith('60')) {
-        code = 'sh' + stockId;
-    } else {
-        code = 'sz' + stockId;
-    }
-    return code;
-}
-
 function generateTrendDataRequest(stockId: string) {
     console.log('fetch before ' + moment().valueOf());
     return axios.get('https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=' + stockId);
-}
-
-function getDayPopStocks(latestDate: string) {
-    let stocks = null;
-    let lines = fs.readFileSync(__dirname + '/../data/dayhot/popular.txt', 'utf8').split('\n');
-
-    for (let i = 0; i < lines.length; i++) {
-        let line = lines[i];
-        if (line === null || line.length === 0) continue;
-
-        let el = lines[i].split(':');
-        let time = el[0];
-        let date = time.substring(0, 8);
-        if (latestDate !== date) continue;
-
-        let mom = moment(time, 'YYYYMMDDHHmmss');
-        if (mom.format('HHmmss') === '143000') {
-            stocks = JSON.parse(el[1]);
-        }
-    }
-    if (stocks == null) return new Array();
-    return stocks;
 }
 
 async function generatePopIndex(latestDate: string) {
@@ -79,7 +47,7 @@ async function generatePopIndex(latestDate: string) {
     let preDate = Utils.preTradeDay(latestDate);
     console.log("Previous trade date:" + preDate);
 
-    let stocks = getDayPopStocks(preDate);
+    let stocks = Utils.getDayPopStocks(preDate);
     if (stocks === null || stocks.length === 0) return;
     // console.log(stocks);
 
@@ -117,7 +85,7 @@ async function generatePopIndex(latestDate: string) {
         // console.log('after read==>' + moment().valueOf());
         console.log('=====>' + stock[1] + ' ' + latestDate);
 
-        let code = getCode(stock[1]);
+        let code = Utils.getCode(stock[1]);
         let obj = JSON.parse(trendsData).data[code];
         let treObj = obj.data.data;
         // console.log(treObj);
@@ -214,7 +182,7 @@ async function fetchData() {
         // console.log('i::' + moment().valueOf());
 
         // let arr = generateTrendDataRequest(getCode(lines[i]));
-        let code = getCode(lines[i]);
+        let code = Utils.getCode(lines[i]);
         codes.push(code)
         req.push(axios.get('https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=' + code));
         // console.log('i=>' + moment().valueOf());
