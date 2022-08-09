@@ -12,6 +12,8 @@ const app = new Koa();
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+global.appRoot = process.cwd();//返回当前进程的工作目录
+
 // log request URL:
 app.use(async (ctx, next) => {
     console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);

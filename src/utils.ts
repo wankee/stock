@@ -47,7 +47,7 @@ export default class Utils {
             isOpen = false;
         } else {
             try {
-                let lines = fs.readFileSync(__dirname + '/../data/holidays/' + mo.year() + '.txt', 'utf8').split('\n');
+                let lines = fs.readFileSync(appRoot + '/data/holidays/' + mo.year() + '.txt', 'utf8').split('\n');
                 // console.log(lines);
 
                 for (let i = 0; i < lines.length; i++) {
@@ -98,7 +98,7 @@ export default class Utils {
 
     public static getDayPopStocks(latestDate: string) {
         let stocks = null;
-        let lines = fs.readFileSync(__dirname + '/../data/dayhot/popular.txt', 'utf8').split('\n');
+        let lines = fs.readFileSync(appRoot + '/data/dayhot/popular.txt', 'utf8').split('\n');
 
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i];

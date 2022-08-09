@@ -82,7 +82,7 @@ function generateData(latestDate: string) {
     let preClose = 1000;
 
     try {
-        let preData = JSON.parse(fs.readFileSync(__dirname + '/../data/pop3/' + preDate + '.txt', 'utf8'));
+        let preData = JSON.parse(fs.readFileSync(appRoot + '/data/pop3/' + preDate + '.txt', 'utf8'));
         if (preData !== null && preData.close !== null) {
             preClose = parseFloat(preData.close);
         }
@@ -102,7 +102,7 @@ function generateData(latestDate: string) {
         let stock = stocks[j];
         console.log(stock);
 
-        let fileName = path.join(__dirname, '/../../fetched/trend/', stock[1], '/', latestDate + '.txt');
+        let fileName = path.join(appRoot, '/fetched/trend/', stock[1], '/', latestDate + '.txt');
         console.log(fileName);
 
         // console.log('before read==>' + moment().valueOf());
@@ -246,16 +246,15 @@ module.exports = {
         try {
             let res = new Array();
 
-            // let files=fs.readdirSync(__dirname + '/../../data/pop3');
             let cur = moment().valueOf();
             console.log('before get thsdayhot:' + cur);
-            fs.readdirSync(__dirname + '/../../data/pop3')
+            fs.readdirSync(appRoot + '/data/pop3')
                 .filter((f: string) => {
                     return f.endsWith('.txt');
                 })
                 .forEach((f: string) => {
                     // console.log('file:' + f);
-                    let data = JSON.parse(fs.readFileSync(__dirname + '/../../data/pop3/' + f, 'utf8'));
+                    let data = JSON.parse(fs.readFileSync(appRoot + '/data/pop3/' + f, 'utf8'));
                     let open = data.open;
                     let close = data.close;
                     let high = data.high;

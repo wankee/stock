@@ -41,7 +41,7 @@ let minOrder = 20;
 function savePopularData(data: any, type: string) {
     let now = moment();
     try {
-        saveOrignData(__dirname + '/../fetched/' + type, now, data);
+        saveOrignData(appRoot + '/fetched/' + type, now, data);
 
         let stock_list = data.data.stock_list;
         let res = new Array();
@@ -58,7 +58,7 @@ function savePopularData(data: any, type: string) {
         }
         let output = now.format("YYYYMMDDHHmmss") + ':' + JSON.stringify(res) + '\n';
 
-        saveFormatData(__dirname + '/../data/' + type, output);
+        saveFormatData(appRoot + '/data/' + type, output);
 
     } catch (err) {
         console.error('fs error:' + err);
@@ -96,7 +96,7 @@ async function fetchHourHot() {
 
 /** 保存分时数据 */
 function saveTrendData(data: any, date: string, stockId: string) {
-    let folder = __dirname + '/../fetched/trend/' + stockId;
+    let folder = appRoot + '/fetched/trend/' + stockId;
     if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder, { recursive: true });
     }
@@ -135,7 +135,7 @@ function fetchHistoryTrend(date: string, stockId: string) {
 }
 
 function savePopularStocks() {
-    let folder = __dirname + '/../data';
+    let folder = appRoot + '/data';
     if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder, { recursive: true });
     }
@@ -220,7 +220,7 @@ function getTradeDay() {
                 }
                 console.log(str);
 
-                let folder = path.join(__dirname, '../data/holidays');
+                let folder = path.join(appRoot, '/data/holidays');
                 if (!fs.existsSync(folder)) {
                     fs.mkdirSync(folder, { recursive: true });
                 }

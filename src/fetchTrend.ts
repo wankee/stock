@@ -6,7 +6,7 @@ const path = require("path")
 
 /** 保存分时数据 */
 function saveTrendData(data: any, date: string, stockId: string) {
-    let folder = __dirname + '/../fetched/trend/' + stockId;
+    let folder = appRoot + '/fetched/trend/' + stockId;
     if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder, { recursive: true });
     }
@@ -56,7 +56,7 @@ async function generatePopIndex(latestDate: string) {
     let preClose = 1000;
 
     try {
-        let preData = JSON.parse(fs.readFileSync(__dirname + '/../data/pop3/' + preDate + '.txt', 'utf8'));
+        let preData = JSON.parse(fs.readFileSync(appRoot + '/data/pop3/' + preDate + '.txt', 'utf8'));
         if (preData !== null && preData.close !== null) {
             preClose = parseFloat(preData.close);
         }
@@ -76,7 +76,7 @@ async function generatePopIndex(latestDate: string) {
         let stock = stocks[j];
         console.log(stock);
 
-        let fileName = path.join(__dirname, '/../fetched/trend/', stock[1], '/', latestDate + '.txt');
+        let fileName = path.join(appRoot, '/fetched/trend/', stock[1], '/', latestDate + '.txt');
         console.log(fileName);
 
         // console.log('before read==>' + moment().valueOf());
@@ -159,7 +159,7 @@ async function generatePopIndex(latestDate: string) {
         res.lowTime = indexLowTime;
     }
 
-    let folder = path.join(__dirname, '/../data/pop3')
+    let folder = path.join(appRoot, '/data/pop3')
     if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder, { recursive: true });
     }
@@ -168,7 +168,7 @@ async function generatePopIndex(latestDate: string) {
 }
 
 async function fetchData() {
-    let lines = fs.readFileSync(__dirname + '/../data/list.txt', 'utf8').split('\n');
+    let lines = fs.readFileSync(appRoot + '/data/list.txt', 'utf8').split('\n');
 
     console.log('Total popular size:' + lines.length);
     // console.log(lines);
