@@ -41,19 +41,11 @@ function generateTrendDataRequest(stockId: string) {
     return axios.get('https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=' + stockId);
 }
 
-async function generatePopIndex(latestDate: string) {
-    console.log('Generate PopIndex:' + latestDate);
+function generatePopIndex(latestDate: string) {
+    console.log('----Generate date:' + latestDate + '----');
 
-    let preDate = Utils.preTradeDay(latestDate);
-    console.log("Previous trade date:" + preDate);
-
-    let stocks = Utils.getDayPopStocks(preDate);
-    if (stocks === null || stocks.length === 0) return;
-    // console.log(stocks);
-
-    let max = 3;
-    let count = stocks.length >= max ? max : stocks.length;
     let preClose = 1000;
+    let preDate = Utils.preTradeDay(latestDate);
 
     try {
         let preData = JSON.parse(fs.readFileSync(appRoot + '/data/pop3/' + preDate + '.txt', 'utf8'));
@@ -66,110 +58,16 @@ async function generatePopIndex(latestDate: string) {
 
     console.log("preClose:" + preClose);
 
-    let res = {
-        "date": latestDate, "preClose": preClose, "open": 0, "high": 0, "low": 0, "close": 0,
-        "highTime": '0930', "lowTime": '0930', "trend": []
-    };
+    let res = Utils.generatePopIndex(latestDate, preClose);
 
-    for (let j = 0; j < count; j++) {
-        // console.log('j:' + j);
-        let stock = stocks[j];
-        console.log(stock);
-
-        let fileName = path.join(appRoot, '/fetched/trend/', stock[1], '/', latestDate + '.txt');
-        console.log(fileName);
-
-        // console.log('before read==>' + moment().valueOf());
-        let trendsData = fs.readFileSync(fileName, 'utf8');
-        // console.log(trendsData.length);
-        // console.log('after read==>' + moment().valueOf());
-        console.log('=====>' + stock[1] + ' ' + latestDate);
-
-        let code = Utils.getCode(stock[1]);
-        let obj = JSON.parse(trendsData).data[code];
-        let treObj = obj.data.data;
-
-        console.log('Trend size:' + treObj.length);
-        if (treObj.length !== 242 || treObj.length !== 267) {
-            console.log(trendsData);
+    if (res !== null) {
+        let folder = path.join(appRoot, '/data/pop3')
+        if (!fs.existsSync(folder)) {
+            fs.mkdirSync(folder, { recursive: true });
         }
 
-        let info = obj.qt[code];
-        console.log(info[0] + ' ' + info[1] + ' ' + info[2]
-            + ' ' + info[3] + ' ' + info[4] + ' ' + info[5]);
-
-        let preClose = info[4];
-        let open = info[5];
-        let close = info[3]
-        let openPercent = 0;
-        let closePercent = 0;
-
-        let indexTrends = new Array();
-        let preSum = 0;
-        let indexPreClose = res.preClose / count;
-        let indexOpen = indexPreClose;
-        let indexHigh = indexPreClose;
-        let indexLow = indexPreClose;
-        let indexClose = indexPreClose * close / preClose;
-        let indexHighTime = '';
-        let indexLowTime = '';
-
-        for (let k = 0; k < treObj.length; k++) {
-            if (j > 0) preSum = res.trend[k][1];
-
-            let tpdata = treObj[k].split(' ');
-            let time = tpdata[0];
-            let price = tpdata[1]
-            let curPrice = indexPreClose * price / preClose
-            let indexPrice = preSum + curPrice;
-
-            if (k === 0) {
-                indexOpen = indexPrice;
-                indexHigh = indexPrice;
-                indexLow = indexPrice;
-                indexHighTime = time;
-                indexLowTime = time;
-            } else {
-                if (indexPrice > indexHigh) {
-                    indexHigh = indexPrice;
-                    indexHighTime = time;
-                }
-                if (indexPrice < indexLow) {
-                    indexLow = indexPrice;
-                    indexLowTime = time;
-                }
-            }
-
-            indexClose = indexPrice;
-
-            indexTrends.push([time, indexPrice]);
-
-            if (k < 2 || k > treObj.length - 3) {
-                console.log(tpdata);
-                console.log('currentPrice:' + curPrice + ' preSum:' + preSum + ' indexPrice:' + indexPrice);
-                console.log(indexTrends[k]);
-                console.log('------------');
-
-            }
-        }
-        console.log('open:' + indexOpen + ' high:' + indexHigh + ' low:' + indexLow + ' close:' + indexClose);
-        console.log('highTime:' + indexHighTime + ' lowTime:' + indexLowTime);
-
-        res.trend = indexTrends;
-        res.open = parseFloat(indexOpen.toFixed(2));
-        res.high = parseFloat(indexHigh.toFixed(2));
-        res.low = parseFloat(indexLow.toFixed(2));
-        res.close = parseFloat(indexClose.toFixed(2));
-        res.highTime = indexHighTime;
-        res.lowTime = indexLowTime;
+        fs.writeFileSync(folder + '/' + latestDate + '.txt', JSON.stringify(res));
     }
-
-    let folder = path.join(appRoot, '/data/pop3')
-    if (!fs.existsSync(folder)) {
-        fs.mkdirSync(folder, { recursive: true });
-    }
-
-    fs.writeFileSync(folder + '/' + latestDate + '.txt', JSON.stringify(res));
 }
 
 async function fetchData() {
