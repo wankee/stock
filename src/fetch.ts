@@ -190,7 +190,7 @@ async function fetchData() {
 /** 获取节假日 */
 function getTradeDay() {
     let now = moment();
-    if (now.hour() !== 0) return;
+    if (now.date() !== 1 || now.hour() !== 0) return;
 
     let year = now.year();
     let endYear = year + 1;

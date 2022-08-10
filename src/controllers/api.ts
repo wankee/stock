@@ -68,7 +68,7 @@ function parseFundHistory(fundHitory: any) {
 }
 
 function generateData(latestDate: string) {
-    console.log('--Generate date:' + latestDate);
+    console.log('----Generate date:' + latestDate + '----');
 
     let preDate = Utils.preTradeDay(latestDate);
     console.log("Previous trade date:" + preDate);
@@ -283,7 +283,7 @@ module.exports = {
             let res = new Array();
             let cur = moment().valueOf();
             let now = moment();
-            for (let start = Utils.shortDay('20220801').hour(15); start.isBefore(now, 'day'); start.add(1, 'days')) {
+            for (let start = Utils.shortDay('20220801').hour(15); !start.isAfter(now, 'day'); start.add(1, 'days')) {
                 console.log(start);
                 let data = generateData(Utils.shortDayStr(start));
                 if (data !== null) {

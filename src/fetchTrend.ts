@@ -88,7 +88,12 @@ async function generatePopIndex(latestDate: string) {
         let code = Utils.getCode(stock[1]);
         let obj = JSON.parse(trendsData).data[code];
         let treObj = obj.data.data;
-        // console.log(treObj);
+
+        console.log('Trend size:' + treObj.length);
+        if (treObj.length !== 242 || treObj.length !== 267) {
+            console.log(trendsData);
+        }
+
         let info = obj.qt[code];
         console.log(info[0] + ' ' + info[1] + ' ' + info[2]
             + ' ' + info[3] + ' ' + info[4] + ' ' + info[5]);
@@ -192,7 +197,7 @@ async function fetchData() {
 
     let latestDate = ''
     await axios.all(req).then(results => {
-        console.log('fetch end ' + moment().valueOf());
+        console.log('fetch end ' + moment().valueOf() + ' size:' + results.length);
 
         for (let j = 0; j < results.length; j++) {
             // console.log('j::' + j + ' ' + moment().valueOf());
@@ -227,7 +232,7 @@ function timeTick() {
     let now = moment();
     console.log(now);
 
-    let target = now.clone().hour(15).minute(31).second(0).millisecond(0);
+    let target = now.clone().hour(15).minute(35).second(0).millisecond(0);
 
     console.log(target);
 
