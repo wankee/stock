@@ -2,15 +2,16 @@ import Utils from '../utils';
 import moment = require('moment');
 import currency = require('currency.js');
 const path = require("path")
+const initCash = 100000;
 
-function checkSellPosition(preData: Array<any>, date: string) {
+function checkSellPosition(preData: Array<any>, date: string): number {
     console.log('---selling---');
 
-    if (preData === null || preData.length === 0) return;
+    if (preData === null || preData.length === 0) return initCash;
     let cash = preData[6];
     let hold = preData[7];
     let tradeDetail = preData[8];
-    // console.log('==>cash:' + cash);
+    console.log('-->cash:' + cash);
 
     // let preDate = Utils.preTradeDay(latestDate);
     // console.log("Previous trade date:" + preDate + " preClose:" + preClose);
@@ -41,7 +42,7 @@ function checkSellPosition(preData: Array<any>, date: string) {
 
         // console.log('before read==>' + moment().valueOf());
         let trendsData = Utils.getStockTrends(stock.code, date);
-        if (trendsData === null) return;
+        if (trendsData === null) return cash;
         // console.log('after read==>' + moment().valueOf());
         //     console.log('=====>' + stock[1] + ' ' + latestDate);
 
@@ -156,10 +157,10 @@ function checkSellPosition(preData: Array<any>, date: string) {
         //     res.lowTime = indexLowTime;
     }
 
-    // return res;
+    return cash;
 }
 
-function generateData(latestDate: string, preClose: number) {
+function generateData(latestDate: string, preClose: number, cash: number) {
     console.log('+++buying+++');
 
     let preDate = Utils.preTradeDay(latestDate);
@@ -175,10 +176,9 @@ function generateData(latestDate: string, preClose: number) {
     let max = 3;
     let count = stocks.length >= max ? max : stocks.length;
 
-    let initCash = 100000;
     let res = {
         "date": latestDate, "preClose": preClose, "open": 0, "high": 0, "low": 0, "close": 0,
-        "highTime": '0930', "lowTime": '0930', "trend": [], "cash": initCash, "hold": [], "tradeDetail": {}
+        "highTime": '0930', "lowTime": '0930', "trend": [], "cash": cash, "hold": [], "tradeDetail": {}
     };
 
     for (let j = 0; j < count; j++) {
@@ -235,15 +235,18 @@ function generateData(latestDate: string, preClose: number) {
             let price = tpdata[1];
 
             if (time === '1430') {
-                let avaiableCash = initCash / count;
+                let avaiableCash = cash / count;
                 let amount = Math.trunc(avaiableCash / (price * 100)) * 100;
                 let total = currency(price).multiply(amount).value;
                 let hold = {
                     'code': code, 'name': name, 'price': price, 'amount': amount,
                     'total': total
                 };
-                res.hold.push(hold);
-                res.cash -= total;
+                
+                if (amount > 0) {
+                    res.hold.push(hold);
+                    res.cash -= total;
+                }
 
                 console.log('++> buying:' + code + ' ' + name + ' ' + price + ' '
                     + amount + ' ' + total + ' cash:' + res.cash);
@@ -308,28 +311,26 @@ module.exports = {
             let res = new Array();
             let cur = moment().valueOf();
 
-            /**不要提交这一行 */
-            let now = moment().date(3);
-            /**不要提交这一行 */
+            let now = moment();
 
             let preClose = 1000;
             let preData = new Array();
             for (let start = Utils.shortDay('20220801').hour(15); !start.isAfter(now, 'day'); start.add(1, 'days')) {
                 // console.log(start);
-                console.log('----Generate date:' + Utils.shortDayStr(start) + '----');
+                console.log('>>>>>>' + Utils.shortDayStr(start) + '<<<<<<');
                 // let preDate = Utils.preTradeDay(start);
                 let date = Utils.shortDayStr(start);
 
-                checkSellPosition(preData, date);
+                let avaiableCash = checkSellPosition(preData, date);
 
                 if (preData) {
                     console.log('==>preData:');
                     console.log(preData);
-                    console.log('==>res end:');
+                    console.log('==>yestoday hold:');
                     console.log(res[res.length - 1]);
                 }
 
-                let data = generateData(date, preClose);
+                let data = generateData(date, preClose, avaiableCash);
                 if (data !== null) {
                     preClose = data.close;
                     let open = data.open;
