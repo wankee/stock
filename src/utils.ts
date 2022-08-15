@@ -69,8 +69,14 @@ export default class Utils {
 
 
     /** 获取前一个交易日期 */
-    public static preTradeDay(date: string): string {
-        let preDay = Utils.shortDay(date).subtract(1, 'days');
+    public static preTradeDay(date: string | Moment): string {
+        let preDay: Moment;
+
+        if (typeof (date) === 'string') {
+            preDay = Utils.shortDay(date).subtract(1, 'days');
+        } else {
+            preDay = date.clone().subtract(1, 'days');
+        }
         // console.log('--------------');
         // console.log(pre);
         let dateStr = Utils.shortDayStr(preDay);
@@ -83,8 +89,14 @@ export default class Utils {
         }
     }
 
-    public static nextTradeDay(date: string): string {
-        let nextDay = Utils.shortDay(date).add(1, 'days');
+    public static nextTradeDay(date: string | Moment): string {
+        let nextDay: Moment;
+
+        if (typeof (date) === 'string') {
+            nextDay = Utils.shortDay(date).add(1, 'days');
+        } else {
+            nextDay = date.clone().add(1, 'days');
+        }
         // console.log('--------------');
         // console.log(pre);
 
@@ -127,6 +139,22 @@ export default class Utils {
             code = 'sz' + stockId;
         }
         return code;
+    }
+
+    public static getStockTrends(code: string, date: string): any {
+        let fileName = path.join(appRoot, '/fetched/trend/', code, '/', date + '.txt');
+        // console.log(fileName);
+
+        // console.log('before read==>' + moment().valueOf());
+        let trendsData;
+
+        try {
+            trendsData = fs.readFileSync(fileName, 'utf8');
+        } catch (err) {
+            console.log('Get trends data data error:' + err);
+            return null;
+        }
+        return JSON.parse(trendsData);
     }
 
     public static generatePopIndex(latestDate: string, preClose: number) {

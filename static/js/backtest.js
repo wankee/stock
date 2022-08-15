@@ -28,8 +28,9 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
         i = 0;
 
     console.log("Data length:" + dataLength);
-    console.log(data);
     for (i; i < dataLength; i += 1) {
+        console.log(data[i]);
+
         ohlc.push([
             data[i][0], // the date
             parseFloat(data[i][1].toFixed(2)), // open

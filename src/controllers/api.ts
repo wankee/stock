@@ -4,6 +4,7 @@ import Fund from '../models/Fund';
 import Utils from '../utils';
 import fs = require('fs');
 import moment = require('moment');
+
 // const router = require('koa-router')();
 const send = require('koa-send');
 const axios = require('axios');
@@ -65,10 +66,6 @@ function parseFundHistory(fundHitory: any) {
         ]);
     }
     return res;
-}
-
-function generateData(latestDate: string, preClose: number) {
-    return Utils.generatePopIndex(latestDate, preClose);
 }
 
 module.exports = {
@@ -139,43 +136,6 @@ module.exports = {
                     let item = [Utils.shortDay(data.date).hour(15).valueOf(), open, high, low, close, 100000];
                     res.push(item);
                 });
-            console.log('end get thsdayhot, used time:' + (moment().valueOf() - cur));
-
-            response.data = res;
-        } catch (err) {
-            console.error(err);
-        };
-
-        ctx.rest(
-            response
-        );
-    },
-
-    'GET /api/backtest': async (ctx, next) => {
-        console.log(ctx.query.pop);
-        console.log(ctx.querystring);
-
-        let response = { "code": 0, "message": "success", "data": {} };
-        try {
-            let res = new Array();
-            let cur = moment().valueOf();
-            let now = moment();
-            let preClose = 1000;
-            for (let start = Utils.shortDay('20220801').hour(15); !start.isAfter(now, 'day'); start.add(1, 'days')) {
-                // console.log(start);
-                console.log('----Generate date:' + Utils.shortDayStr(start) + '----');
-
-                let data = generateData(Utils.shortDayStr(start), preClose);
-                if (data !== null) {
-                    preClose = data.close;
-                    let open = data.open;
-                    let close = data.close;
-                    let high = data.high;
-                    let low = data.low;
-                    let item = [start.valueOf(), open, high, low, close, 100000];
-                    res.push(item);
-                }
-            }
             console.log('end get thsdayhot, used time:' + (moment().valueOf() - cur));
 
             response.data = res;
