@@ -242,7 +242,7 @@ function generateData(latestDate: string, preClose: number, cash: number) {
                     'code': code, 'name': name, 'price': price, 'amount': amount,
                     'total': total
                 };
-                
+
                 if (amount > 0) {
                     res.hold.push(hold);
                     res.cash -= total;
@@ -318,17 +318,22 @@ module.exports = {
             for (let start = Utils.shortDay('20220801').hour(15); !start.isAfter(now, 'day'); start.add(1, 'days')) {
                 // console.log(start);
                 console.log('>>>>>>' + Utils.shortDayStr(start) + '<<<<<<');
+                if (!Utils.isTradingDay(start)) {
+                    console.log('Not trading day!');
+                    continue;
+                }
+
                 // let preDate = Utils.preTradeDay(start);
                 let date = Utils.shortDayStr(start);
 
                 let avaiableCash = checkSellPosition(preData, date);
 
-                if (preData) {
-                    console.log('==>preData:');
-                    console.log(preData);
-                    console.log('==>yestoday hold:');
-                    console.log(res[res.length - 1]);
-                }
+                // if (preData) {
+                //     console.log('==>preData:');
+                //     console.log(preData);
+                //     console.log('==>yestoday hold:');
+                //     console.log(res[res.length - 1]);
+                // }
 
                 let data = generateData(date, preClose, avaiableCash);
                 if (data !== null) {

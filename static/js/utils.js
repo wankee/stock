@@ -18,3 +18,7 @@ export function simpleDebounce(fn, delay = 100) {
         }, delay)
     }
 }
+
+export function format(date) {
+    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+}

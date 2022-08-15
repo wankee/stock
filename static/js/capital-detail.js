@@ -1,6 +1,4 @@
-function format(date) {
-    return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-}
+import * as utils from './utils.js';
 
 function calcuChangeInDay(fund, timestamp, start) {
     let index = start,
@@ -207,7 +205,7 @@ $.getJSON(window.location.origin + '/api/trades_fund_history', function (data) {
         },
         tooltip: {
             formatter: function () {
-                return ['<b>' + format(new Date(this.x)) + '</b>'].concat(
+                return ['<b>' + utils.format(new Date(this.x)) + '</b>'].concat(
                     this.points.map(function (point) {
                         console.log(point);
                         let str = '';
