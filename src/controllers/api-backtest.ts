@@ -9,8 +9,8 @@ function checkSellPosition(preData: Array<any>, date: string): number {
 
     if (preData === null || preData.length === 0) return initCash;
     let cash = preData[6];
-    let hold = preData[7];
-    let tradeDetail = preData[8];
+    let hold = preData[8];
+    let tradeDetail = preData[9];
     console.log('-->cash:' + cash);
 
     // let preDate = Utils.preTradeDay(latestDate);
@@ -88,7 +88,7 @@ function checkSellPosition(preData: Array<any>, date: string): number {
             if (time === '0930') {
                 cash += currency(price).multiply(amount).value;
                 stock.amount -= amount;
-                stock.total = currency(price).multiply(stock.amount).value;
+                stock.totalCost = currency(price).multiply(stock.amount).value;
                 // let avaiableCash = initCash / count;
                 // let hold = { 'code': code, 'name': name, 'price': price, 'amount': amount, 'total': price * amount };
                 // res.hold.push(hold);
