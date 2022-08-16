@@ -177,8 +177,9 @@ function generateData(latestDate: string, preClose: number, cash: number) {
     let count = stocks.length >= max ? max : stocks.length;
 
     let res = {
-        "date": latestDate, "preClose": preClose, "open": 0, "high": 0, "low": 0, "close": 0,
-        "highTime": '0930', "lowTime": '0930', "trend": [], "cash": cash, "hold": [], "tradeDetail": {}
+        "date": latestDate, "preClose": preClose, "open": 0, "high": 0, "low": 0,
+        "close": 0, "highTime": '0930', "lowTime": '0930', "trend": [],
+        "cash": cash, "hold": [], "tradeDetail": {}, 'marketValue': 0
     };
 
     for (let j = 0; j < count; j++) {
@@ -227,6 +228,7 @@ function generateData(latestDate: string, preClose: number, cash: number) {
         let indexLowTime = '';
 
         let maxLength = 242;
+        let hold = null;
         for (let k = 0; k < maxLength; k++) {
             if (j > 0) preSum = res.trend[k][1];
 
@@ -238,9 +240,9 @@ function generateData(latestDate: string, preClose: number, cash: number) {
                 let avaiableCash = cash / count;
                 let amount = Math.trunc(avaiableCash / (price * 100)) * 100;
                 let total = currency(price).multiply(amount).value;
-                let hold = {
-                    'code': code, 'name': name, 'price': price, 'amount': amount,
-                    'total': total
+                hold = {
+                    'code': code, 'name': name, 'aveCost': price, 'amount': amount,
+                    'totalCost': total, 'curPrice': price, 'curVaule': total
                 };
 
                 if (amount > 0) {
@@ -252,6 +254,14 @@ function generateData(latestDate: string, preClose: number, cash: number) {
                     + amount + ' ' + total + ' cash:' + res.cash);
                 // console.log('++> buying cash:' + res.cash);
                 // console.log(hold);
+            }
+
+            if (time === '1500') {
+                if (hold !== null && hold.amount > 0) {
+                    hold.curPrice = price;
+                    hold.curVaule = currency(price).multiply(hold.amount).value;
+                    res.marketValue += hold.curVaule;
+                }
             }
 
             let curPrice = indexPreClose * price / preClose;
@@ -331,8 +341,8 @@ module.exports = {
                 // if (preData) {
                 //     console.log('==>preData:');
                 //     console.log(preData);
-                //     console.log('==>yestoday hold:');
-                //     console.log(res[res.length - 1]);
+                // console.log('==>yestoday hold:');
+                // console.log(res[res.length - 1]);
                 // }
 
                 let data = generateData(date, preClose, avaiableCash);
@@ -342,10 +352,11 @@ module.exports = {
                     let close = data.close;
                     let high = data.high;
                     let low = data.low;
+                    console.log(data.cash);
                     console.log(data.hold);
-                    // console.log(data.tradeDetail);
+                    console.log(data.marketValue);
 
-                    preData = [start.valueOf(), open, high, low, close, 99999, data.cash, data.hold, data.tradeDetail];
+                    preData = [start.valueOf(), open, high, low, close, 99999, data.cash, data.marketValue, data.hold, data.tradeDetail];
                     res.push(JSON.parse(JSON.stringify(preData)));
                 }
             }

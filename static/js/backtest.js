@@ -7,6 +7,8 @@ Highcharts.setOptions({
 });
 const SERIES_NAME_CASH = "现金";
 const SERIES_NAME_MARKET_VALUE = "市值";
+const SERIES_NAME_TOTAL_ASSETS = "总资产";
+
 let querystr = window.location.href.split('?')[1];
 let urlSearch = new URLSearchParams('?' + querystr);
 let pop = parseInt(urlSearch.get('pop'));
@@ -32,6 +34,8 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
 
     console.log("Data length:" + dataLength);
     let cash = new Array();
+    let marketValue = new Array();
+    let totalAssets = new Array();
 
     for (i; i < dataLength; i += 1) {
         console.log(data[i]);
@@ -48,7 +52,10 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
             data[i][5] // the volume
         ]);
 
-        cash[i] = { x: data[i][0], y: data[i][6], detail: data[i][7] };
+
+        cash[i] = { x: data[i][0], y: data[i][6], hold: data[i][8], tradeDetail: data[i][9] };
+        marketValue[i] = { x: data[i][0], y: data[i][7], hold: data[i][8], tradeDetail: data[i][9] };
+        totalAssets[i] = { x: data[i][0], y: currency(data[i][6]).add(data[i][7]).value, hold: data[i][8], tradeDetail: data[i][9] };
 
     }
 
@@ -142,6 +149,14 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
             turboThreshold: 0,
             name: SERIES_NAME_CASH,
             data: cash
+        }, {
+            turboThreshold: 0,
+            name: SERIES_NAME_MARKET_VALUE,
+            data: marketValue
+        }, {
+            turboThreshold: 0,
+            name: SERIES_NAME_TOTAL_ASSETS,
+            data: totalAssets
         }]
     })
 }).fail(function (jqXHR, textStatus) {
