@@ -242,7 +242,7 @@ function generateData(latestDate: string, preClose: number, cash: number) {
                 let total = currency(price).multiply(amount).value;
                 hold = {
                     'code': code, 'name': name, 'aveCost': price, 'amount': amount,
-                    'totalCost': total, 'curPrice': price, 'curVaule': total
+                    'totalCost': total, 'curPrice': price, 'curValue': total, 'balance': 0
                 };
 
                 if (amount > 0) {
@@ -259,8 +259,9 @@ function generateData(latestDate: string, preClose: number, cash: number) {
             if (time === '1500') {
                 if (hold !== null && hold.amount > 0) {
                     hold.curPrice = price;
-                    hold.curVaule = currency(price).multiply(hold.amount).value;
-                    res.marketValue += hold.curVaule;
+                    hold.curValue = currency(price).multiply(hold.amount).value;
+                    hold.balance = currency(hold.curValue).subtract(hold.totalCost).value;
+                    res.marketValue += hold.curValue;
                 }
             }
 

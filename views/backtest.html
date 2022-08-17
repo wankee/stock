@@ -12,6 +12,154 @@
 <script src="/static/js/backtest.js" type="module"></script>
 
 <body>
-    <div id="container" style="width: 800px; height: 400px; margin: 0 auto"></div>
+
+    <div class="container-fluid">
+        <div class="row">
+          <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3">
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="#">
+                    <span data-feather="home"></span>
+                    Dashboard
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file"></span>
+                    Orders
+                  </a>
+                </li>
+              </ul>
+      
+              <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>Saved reports</span>
+                <a class="link-secondary" href="#" aria-label="Add a new report">
+                  <span data-feather="plus-circle"></span>
+                </a>
+              </h6>
+              <ul class="nav flex-column mb-2">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file-text"></span>
+                    Current month
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    <span data-feather="file-text"></span>
+                    Last quarter
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+      
+          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="div-container" >
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 mb-2 border-bottom">
+              <h4 class="h4">资产曲线</h1>
+              
+              <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                  <!-- <button type="button" class="btn btn-sm btn-outline-secondary">Share</button> -->
+                  <!-- <button type="button" class="btn btn-sm btn-outline-secondary">Export</button> -->
+                </div>
+                <!-- <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                  <span data-feather="calendar"></span>
+                  This week
+                </button> -->
+              </div>
+            </div>
+      
+            <!-- <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas> -->
+            <div id="container" class="col-md-12" style="height: 400px; margin: 0 auto"></div>
+            <!-- <h2>Section title</h2> -->
+            <!-- <div class="panel-heading"> -->
+            <h4 class="panel-title mt-2"><span class="glyphicon glyphicon-th-list"></span>市值：{{totalBalance}}</h4>
+            <!-- </div> -->
+            <div class="container col-md-12">
+                <div class="panel panel-default">
+                    
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <button class="nav-link" :class="{ active:activeTabIndex===1 }" data-bs-toggle="tab"
+                                    data-bs-target="#nav-current" type="button" role="tab" @click="selectTag(1)">
+                                当前持仓
+                            </button>
+                            <button class="nav-link" :class="{ active:activeTabIndex===2 }" data-bs-toggle="tab"
+                                    data-bs-target="#nav-cleared" type="button" role="tab" @click="selectTag(2)">
+                                历史持仓
+                            </button>
+                            <button class="nav-link" :class="{ active:activeTabIndex===3 }" v-if="stockHistory.length !==0"
+                                    data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab"
+                                    @click="selectTag(3)">
+                                {{stockHistory[0].name}} ({{stockHistory[0].code}})
+                            </button>
+                        </div>
+                    </nav>
+            
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane" :class="{active:activeTabIndex===1}" id="nav-current" role="tabpanel">
+                            <div v-for="p in currentStocks">
+                                <div class="td-text">{{p.name}} ({{p.code}}) &nbsp;&nbsp;&nbsp;&nbsp;持仓数：{{p.amount}}</div>
+                                <div class="td-text">成本/市价：{{p.aveCost}}/{{p.curPrice}} &nbsp;&nbsp;&nbsp;&nbsp;
+                                    市值：{{p.curValue}} &nbsp;&nbsp;&nbsp;&nbsp;
+                                    盈亏：<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span>
+                                </div>
+                                <div class="td-text"></div>
+                                <br>
+                            </div>
+                        </div>
+            
+                        <div class="tab-pane" :class="{active:activeTabIndex===2}" id="nav-cleared" role="tabpanel">
+                            <div class="item-container" v-for="p in clearedStocks">
+                                <div class="indicator" :style="{background: p.balance > 0 ? 'red':'green'}"></div>
+                                <div>
+                                    <div class="td-text">{{p.name}} &nbsp;({{p.code}})</div>
+                                    <div class="td-text">盈亏：&nbsp;<span :style="{color: p.balance > 0 ? 'red':'green'}">{{p.balance}}</span>
+                                    </div>
+                                    <div class="td-text">数据：&nbsp;{{p.containDays}}天{{p.count}}次({{p.startDate}}-{{p.endDate}})
+                                    </div>
+                                </div>
+                                <button @click="showDetail(p)">明细</button>
+                            </div>
+                        </div>
+                        <template v-if="stockHistory.length !==0">
+                            <div class="tab-pane" :class="{active:activeTabIndex===3}" id="nav-detail" role="tabpanel">
+                                <div class="detail-item-container" v-for="p in stockHistory">
+            
+                                    <div class="detail-left flex-column-center-all">
+                                        <div class="detail-indicator flex-row-center-all"
+                                             :style="{background: p.balance > 0 ? 'red':'green'}">
+                                            <div style="font-size: small">
+                                                {{p.balance > 0 ? "+":"-"}}
+                                            </div>
+                                        </div>
+                                        <hr class="mt-1 mb-0" style="width:1px; flex: 1; ">
+                                    </div>
+            
+                                    <div class="detail-right">
+                                        <div class="td-text ms-1 mt-1">{{getDateString(p.date)}}</div>
+                                        <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
+                                            {{new Number(p.shares)>0?"买入":"卖出"}}价格：&nbsp;{{p.price}}
+                                        </div>
+                                        <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
+                                            {{new Number(p.shares)>0?"买入":"卖出"}}数量：{{Math.abs(p.shares)}}
+                                        </div>
+                                        <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
+                                            {{new Number(p.shares)>0?"买入":"卖出"}}数量：{{Math.abs(p.shares)}}
+                                        </div>
+                                        <div class="td-text ms-1">发生金额：&nbsp;{{p.balance}}</div>
+                                        <hr class="mt-2 mb-2">
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+          </main>
+        </div>
+      </div>
 </body>
 {% endblock %}
