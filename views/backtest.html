@@ -2,13 +2,14 @@
 {% block title %}<title>Highcharts Example</title>{% endblock %}
 
 {% block main %}
-
+<link href="/static/css/backtest.css" rel="stylesheet">
 <!-- <script src="/static/js/jquery.min.js"></script> -->
 <!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
 <script src="https://code.highcharts.com/stock/highstock.js"></script>
 <!-- <script src="https://code.highcharts.com/modules/data.js"></script> -->
 <!-- <script src="/static/js/papaparse.min.js"></script> -->
 <script src="https://unpkg.com/currency.js@2.0.4/dist/currency.min.js"></script>
+<script src="/static/js/moment.min.js"></script>
 <script src="/static/js/backtest.js" type="module"></script>
 
 <body>
@@ -75,10 +76,10 @@
             <div id="container" class="col-md-12" style="height: 400px; margin: 0 auto"></div>
             <!-- <h2>Section title</h2> -->
             <!-- <div class="panel-heading"> -->
-            <h5 class="panel-title mt-2">日期：{{date}} &nbsp;&nbsp;&nbsp;&nbsp;市值：{{marketValue}} &nbsp;&nbsp;&nbsp;&nbsp;盈亏：{{totalBalance}}</h4>
+            <h5 class="panel-title mt-2 mb-3">日期：{{date}} &nbsp;&nbsp;&nbsp;&nbsp;市值：{{marketValue}} &nbsp;&nbsp;&nbsp;&nbsp;盈亏：{{totalBalance}}</h4>
             <!-- </div> -->
-            <div class="container col-md-12 px-2 mx-2">
-                <div class="panel panel-default">
+            <div class="col-md-12 row mx-0">
+                <div class="panel panel-default col-md-7 px-2 mx-2 ">
                     
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -90,10 +91,10 @@
                                     data-bs-target="#nav-cleared" type="button" role="tab" @click="selectTag(2)">
                                 历史持仓
                             </button>
-                            <button class="nav-link" :class="{ active:activeTabIndex===3 }" v-if="stockHistory.length !==0"
+                            <button class="nav-link" :class="{ active:activeTabIndex===3 }" v-if="tradeDetail.length !==0"
                                     data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab"
                                     @click="selectTag(3)">
-                                {{stockHistory[0].name}} ({{stockHistory[0].code}})
+                                {{tradeDetail[0].name}} ({{tradeDetail[0].code}})
                             </button>
                         </div>
                     </nav>
@@ -124,39 +125,36 @@
                                 <button @click="showDetail(p)">明细</button>
                             </div>
                         </div>
-                        <template v-if="stockHistory.length !==0">
-                            <div class="tab-pane" :class="{active:activeTabIndex===3}" id="nav-detail" role="tabpanel">
-                                <div class="detail-item-container" v-for="p in stockHistory">
-            
-                                    <div class="detail-left flex-column-center-all">
-                                        <div class="detail-indicator flex-row-center-all"
-                                             :style="{background: p.balance > 0 ? 'red':'green'}">
-                                            <div style="font-size: small">
-                                                {{p.balance > 0 ? "+":"-"}}
-                                            </div>
-                                        </div>
-                                        <hr class="mt-1 mb-0" style="width:1px; flex: 1; ">
-                                    </div>
-            
-                                    <div class="detail-right">
-                                        <div class="td-text ms-1 mt-1">{{getDateString(p.date)}}</div>
-                                        <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
-                                            {{new Number(p.shares)>0?"买入":"卖出"}}价格：&nbsp;{{p.price}}
-                                        </div>
-                                        <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
-                                            {{new Number(p.shares)>0?"买入":"卖出"}}数量：{{Math.abs(p.shares)}}
-                                        </div>
-                                        <div class="td-text ms-1" v-if="new Number(p.shares) != 0">
-                                            {{new Number(p.shares)>0?"买入":"卖出"}}数量：{{Math.abs(p.shares)}}
-                                        </div>
-                                        <div class="td-text ms-1">发生金额：&nbsp;{{p.balance}}</div>
-                                        <hr class="mt-2 mb-2">
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
                     </div>
                 </div>
+                <template v-if="tradeDetail.length !==0">
+                  <div class="tab-pane col-md-4 px-0" :class="{active:activeTabIndex===3}" id="nav-detail" role="tabpanel">
+                      <div class="detail-item-container" v-for="p in tradeDetail">
+  
+                          <div class="detail-left flex-column-center-all">
+                              <div class="detail-indicator flex-row-center-all"
+                                   :style="{background: p.amount > 0 ? 'red':'green'}">
+                                  <div style="font-size: small">
+                                      {{p.amount > 0 ? "+":"-"}}
+                                  </div>
+                              </div>
+                              <hr class="mt-1 mb-0" style="width:1px; flex: 1; ">
+                          </div>
+  
+                          <div class="detail-right" v-if="new Number(p.amount) != 0">
+                              <div class="td-text ms-1 mt-1">{{getDateString(p.time)}}&nbsp;&nbsp;
+                                {{new Number(p.amount)>0?"买入:":"卖出:"}}&nbsp;&nbsp;{{p.name}} ({{p.code}})&nbsp;&nbsp;
+                              </div>
+                              <div class="td-text ms-1">
+                                  价格：&nbsp;{{p.price}}&nbsp;&nbsp;
+                                  数量：{{Math.abs(p.amount)}}&nbsp;&nbsp;
+                                  金额：&nbsp;{{p.cost}}
+                              </div>
+                              <hr class="mt-2 mb-2">
+                          </div>
+                      </div>
+                  </div>
+              </template>
             </div>
           </main>
         </div>

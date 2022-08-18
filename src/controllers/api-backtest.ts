@@ -37,9 +37,6 @@ function checkSellPosition(preData: Array<any>, date: string): number {
         let stock = hold[j];
         // console.log(stock.code + ' ' + stock.name);
 
-        let fileName = path.join(appRoot, '/fetched/trend/', stock.code, '/', date + '.txt');
-        // console.log(fileName);
-
         // console.log('before read==>' + moment().valueOf());
         let trendsData = Utils.getStockTrends(stock.code, date);
         if (trendsData === null) return cash;
@@ -179,7 +176,7 @@ function generateData(latestDate: string, preClose: number, cash: number) {
     let res = {
         "date": latestDate, "preClose": preClose, "open": 0, "high": 0, "low": 0,
         "close": 0, "highTime": '0930', "lowTime": '0930', "trend": [],
-        "cash": cash, "hold": [], "tradeDetail": {}, 'marketValue': 0
+        "cash": cash, "hold": [], "tradeDetail": [], 'marketValue': 0
     };
 
     for (let j = 0; j < count; j++) {
@@ -187,14 +184,10 @@ function generateData(latestDate: string, preClose: number, cash: number) {
         let stock = stocks[j];
         // console.log(stock);
 
-        let fileName = path.join(appRoot, '/fetched/trend/', stock[1], '/', latestDate + '.txt');
-        // console.log(fileName);
-
         // console.log('before read==>' + moment().valueOf());
         let trendsData = Utils.getStockTrends(stock[1], latestDate);
         if (trendsData === null) return null;
         // console.log('after read==>' + moment().valueOf());
-
         // console.log('=====>' + stock[1] + ' ' + latestDate);
 
         let qcode = Utils.getCode(stock[1]);
@@ -245,8 +238,14 @@ function generateData(latestDate: string, preClose: number, cash: number) {
                     'totalCost': total, 'curPrice': price, 'curValue': total, 'balance': 0
                 };
 
+                let record = {
+                    'time': moment(latestDate + time + '00','YYYYMMDDHHmmss').valueOf(), 'code': code, 'name': name, 'price': price, 'amount': amount,
+                    'cost': total, 'fee': 0
+                };
+
                 if (amount > 0) {
                     res.hold.push(hold);
+                    res.tradeDetail.push(record);
                     res.cash -= total;
                 }
 

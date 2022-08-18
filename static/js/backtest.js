@@ -10,6 +10,7 @@ let vm = new Vue({
         trades: [],
         totalBalance: 0,
         currentStocks: [],
+        tradeDetail:[],
         clearedStocks: [],
         stockHistory: [],
         activeTabIndex: 1
@@ -25,7 +26,7 @@ let vm = new Vue({
         },
 
         getDateString: function (date) {
-            return moment(date).format('YYYY年MM月DD日')
+            return moment(date).format('YYYY-MM-DD HH:mm:ss')
         },
 
         deleteProduct: function (id) {
@@ -116,19 +117,22 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
 
         let hold = data[i][8];
         let marVal = data[i][7];
+        let tradeDetail = data[i][9];
+
         vm.currentStocks = hold;
         vm.date = utils.format(new Date(data[i][0]));
         vm.marketValue = marVal;
         vm.totalBalance = 0;
-        
+        vm.tradeDetail = tradeDetail;
+
         for (let h of hold) {
             console.log(h.balance);
             vm.totalBalance += h.balance;
         }
 
-        cash[i] = { x: data[i][0], y: data[i][6], tradeDetail: data[i][9] };
-        marketValue[i] = { x: data[i][0], y: marVal, tradeDetail: data[i][9] };
-        totalAssets[i] = { x: data[i][0], y: currency(data[i][6]).add(marVal).value, hold: hold, tradeDetail: data[i][9] };
+        cash[i] = { x: data[i][0], y: data[i][6]};
+        marketValue[i] = { x: data[i][0], y: marVal};
+        totalAssets[i] = { x: data[i][0], y: currency(data[i][6]).add(marVal).value, hold: hold, tradeDetail: tradeDetail };
 
     }
 
@@ -271,6 +275,7 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
 
                         if (point.series.name === SERIES_NAME_TOTAL_ASSETS && point.point.hold) {
                             vm.currentStocks = point.point.hold;
+                            vm.tradeDetail = point.point.tradeDetail;
 
                             // console.log(point.point.detail);
                             for (let hold of point.point.hold) {
