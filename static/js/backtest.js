@@ -5,6 +5,8 @@ import * as utils from './utils.js';
 let vm = new Vue({
     el: '#div-container',
     data: {
+        date: utils.format(new Date()),
+        marketValue: 0,
         trades: [],
         totalBalance: 0,
         currentStocks: [],
@@ -113,18 +115,22 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
 
 
         let hold = data[i][8];
-        let val = data[i][7];
+        let marVal = data[i][7];
         vm.currentStocks = hold;
-        vm.totalBalance = val;
+        vm.date = utils.format(new Date(data[i][0]));
+        vm.marketValue = marVal;
+        vm.totalBalance = 0;
+        
+        for (let h of hold) {
+            console.log(h.balance);
+            vm.totalBalance += h.balance;
+        }
 
         cash[i] = { x: data[i][0], y: data[i][6], tradeDetail: data[i][9] };
-        marketValue[i] = { x: data[i][0], y: val, tradeDetail: data[i][9] };
-        totalAssets[i] = { x: data[i][0], y: currency(data[i][6]).add(val).value, hold: hold, tradeDetail: data[i][9] };
+        marketValue[i] = { x: data[i][0], y: marVal, tradeDetail: data[i][9] };
+        totalAssets[i] = { x: data[i][0], y: currency(data[i][6]).add(marVal).value, hold: hold, tradeDetail: data[i][9] };
 
     }
-
-
-
 
     // vm.trades = data.trades;
     // let total;
@@ -252,27 +258,32 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
         },
         tooltip: {
             formatter: function () {
+                vm.date = utils.format(new Date(this.x));
+
                 return ['<b>' + utils.format(new Date(this.x)) + '</b>'].concat(
                     this.points.map(function (point) {
                         console.log(point);
                         let str = '';
 
                         // vm.clearedStocks = cleared;
-                        vm.totalBalance = 0
+                        vm.marketValue = 0;
+                        vm.totalBalance = 0;
+
                         if (point.series.name === SERIES_NAME_TOTAL_ASSETS && point.point.hold) {
                             vm.currentStocks = point.point.hold;
 
                             // console.log(point.point.detail);
                             for (let hold of point.point.hold) {
-                                
-                                console.log(hold);
+
+                                console.log(hold.curValue + ' ' + hold.balance);
                                 // if (point.series.name === SERIES_NAME_CASH) {
                                 //     str += '<br>' + detail[1] + ' ' + detail[2];
                                 // } else
-                                    vm.totalBalance += hold.curValue;
-                                    // str += '<br>' + detail.code + ' ' + detail.name + ' ' + detail.shares;
+                                vm.marketValue += hold.curValue;
+                                vm.totalBalance += hold.balance;
+                                // str += '<br>' + detail.code + ' ' + detail.name + ' ' + detail.shares;
                             }
-                            console.log(vm.totalBalance);
+                            console.log(vm.marketValue + ' ' + vm.totalBalance);
 
                         }
                         // console.log(str);
