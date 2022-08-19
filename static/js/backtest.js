@@ -10,7 +10,7 @@ let vm = new Vue({
         trades: [],
         totalBalance: 0,
         currentStocks: [],
-        tradeDetail:[],
+        tradeRecords:[],
         clearedStocks: [],
         stockHistory: [],
         activeTabIndex: 1
@@ -117,13 +117,13 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
 
         let hold = data[i][8];
         let marVal = data[i][7];
-        let tradeDetail = data[i][9];
+        let tradeRecords = data[i][9];
 
         vm.currentStocks = hold;
         vm.date = utils.format(new Date(data[i][0]));
         vm.marketValue = marVal;
         vm.totalBalance = 0;
-        vm.tradeDetail = tradeDetail;
+        vm.tradeRecords = tradeRecords;
 
         for (let h of hold) {
             console.log(h.balance);
@@ -132,7 +132,7 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
 
         cash[i] = { x: data[i][0], y: data[i][6]};
         marketValue[i] = { x: data[i][0], y: marVal};
-        totalAssets[i] = { x: data[i][0], y: currency(data[i][6]).add(marVal).value, hold: hold, tradeDetail: tradeDetail };
+        totalAssets[i] = { x: data[i][0], y: currency(data[i][6]).add(marVal).value, hold: hold, tradeRecords: tradeRecords };
 
     }
 
@@ -275,7 +275,7 @@ $.getJSON('/api/backtest?pop=' + pop).done(function (response) {
 
                         if (point.series.name === SERIES_NAME_TOTAL_ASSETS && point.point.hold) {
                             vm.currentStocks = point.point.hold;
-                            vm.tradeDetail = point.point.tradeDetail;
+                            vm.tradeRecords = point.point.tradeRecords;
 
                             // console.log(point.point.detail);
                             for (let hold of point.point.hold) {

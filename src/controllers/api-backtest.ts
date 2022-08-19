@@ -4,13 +4,13 @@ import currency = require('currency.js');
 const path = require("path")
 const initCash = 100000;
 
-function checkSellPosition(preData: Array<any>, date: string): number {
+function checkSellPosition(preData: Array<any>, date: string) {
     console.log('---selling---');
 
-    if (preData === null || preData.length === 0) return initCash;
+    if (preData === null || preData.length === 0) return null;
     let cash = preData[6];
-    let hold = preData[8];
-    let tradeDetail = preData[9];
+    let preHolds = preData[8];
+    let preTradeDetail = preData[9];
     console.log('-->cash:' + cash);
 
     // let preDate = Utils.preTradeDay(latestDate);
@@ -28,22 +28,33 @@ function checkSellPosition(preData: Array<any>, date: string): number {
 
     // let initCash = 100000;
     let res = {
-        "date": date, "preClose": 1000, "open": 0, "high": 0, "low": 0, "close": 0,
-        "highTime": '0930', "lowTime": '0930', "trend": [], "cash": cash, "hold": hold, "tradeDetail": tradeDetail
+        "date": date, "preClose": 1000, "open": 0, "high": 0, "low": 0,
+        "close": 0, "highTime": '0930', "lowTime": '0930', "trend": [],
+        "cash": cash, "hold": [], "tradeRecords": [], 'marketValue': 0
     };
 
-    for (let j = 0; j < hold.length; j++) {
+    for (let j = 0; j < preHolds.length; j++) {
         //     // console.log('j:' + j);
-        let stock = hold[j];
+        let preHold = preHolds[j];
+
+        let name = preHold.name;
+        let code = preHold.code;
+        let amount = preHold.amount;
+
+        let hold = {
+            'code': preHold.code, 'name': preHold.name, 'aveCost': preHold.aveCost,
+            'amount': preHold.amount, 'totalCost': preHold.totalCost, 'curPrice': preHold.curPrice,
+            'curValue': preHold.curValue, 'balance': preHold.balance
+        };
         // console.log(stock.code + ' ' + stock.name);
 
         // console.log('before read==>' + moment().valueOf());
-        let trendsData = Utils.getStockTrends(stock.code, date);
-        if (trendsData === null) return cash;
+        let trendsData = Utils.getStockTrends(code, date);
+        if (trendsData === null) return null;
         // console.log('after read==>' + moment().valueOf());
         //     console.log('=====>' + stock[1] + ' ' + latestDate);
 
-        let qcode = Utils.getCode(stock.code);
+        let qcode = Utils.getCode(code);
         let obj = trendsData.data[qcode];
         let treObj = obj.data.data;
 
@@ -55,9 +66,7 @@ function checkSellPosition(preData: Array<any>, date: string): number {
         let info = obj.qt[qcode];
         // console.log(info[0] + ' ' + info[1] + ' ' + info[2] + ' ' + info[3] + ' ' + info[4] + ' ' + info[5]);
 
-        let name = stock.name;
-        let code = stock.code;
-        let amount = stock.amount;
+
         //     let preClose = info[4];
         //     let open = info[5];
         //     let close = info[3]
@@ -83,16 +92,29 @@ function checkSellPosition(preData: Array<any>, date: string): number {
             let price = tpdata[1];
 
             if (time === '0930') {
-                cash += currency(price).multiply(amount).value;
-                stock.amount -= amount;
-                stock.totalCost = currency(price).multiply(stock.amount).value;
+                let total = currency(price).multiply(amount).value;
+                res.cash += total;
+                hold.amount -= amount;
+                hold.totalCost = -total;
                 // let avaiableCash = initCash / count;
                 // let hold = { 'code': code, 'name': name, 'price': price, 'amount': amount, 'total': price * amount };
                 // res.hold.push(hold);
+                if (hold.amount > 0) {
+                    res.hold.push(hold);
+                    // res.tradeRecords.push(record);
+                    // res.cash += total;
+                }
+
+                let record = {
+                    'time': moment(date + time + '00', 'YYYYMMDDHHmmss').valueOf(), 'code': code,
+                    'name': name, 'price': price, 'amount': -amount,
+                    'total': -total, 'fee': 0
+                };
+                res.tradeRecords.push(record);
 
                 console.log('--> selling:' + code + ' ' + name + ' ' + price + ' '
-                    + amount + ' ' + currency(price).multiply(amount).value
-                    + ' cash:' + cash);
+                    + amount + ' ' + total
+                    + ' cash:' + res.cash);
                 // console.log('After Selling:');
                 // console.log('cash:' + cash);
                 // console.log(hold);
@@ -154,10 +176,10 @@ function checkSellPosition(preData: Array<any>, date: string): number {
         //     res.lowTime = indexLowTime;
     }
 
-    return cash;
+    return res;
 }
 
-function generateData(latestDate: string, preClose: number, cash: number) {
+function generateData(latestDate: string, preClose: number, cash: number, initHold, initTradeRecords) {
     console.log('+++buying+++');
 
     let preDate = Utils.preTradeDay(latestDate);
@@ -173,10 +195,20 @@ function generateData(latestDate: string, preClose: number, cash: number) {
     let max = 3;
     let count = stocks.length >= max ? max : stocks.length;
 
+    // let initHold = [];
+    // let initTradeRecords = [];
+    // let cash = initCash;
+
+    // if (sell !== null) {
+    //     cash = sell.cash;
+    //     initHold = sell.hold;
+    //     initTradeRecords = sell.tradeRecords;
+    // }
+
     let res = {
         "date": latestDate, "preClose": preClose, "open": 0, "high": 0, "low": 0,
         "close": 0, "highTime": '0930', "lowTime": '0930', "trend": [],
-        "cash": cash, "hold": [], "tradeDetail": [], 'marketValue': 0
+        "cash": cash, "hold": initHold, "tradeRecords": initTradeRecords, 'marketValue': 0
     };
 
     for (let j = 0; j < count; j++) {
@@ -239,13 +271,13 @@ function generateData(latestDate: string, preClose: number, cash: number) {
                 };
 
                 let record = {
-                    'time': moment(latestDate + time + '00','YYYYMMDDHHmmss').valueOf(), 'code': code, 'name': name, 'price': price, 'amount': amount,
-                    'cost': total, 'fee': 0
+                    'time': moment(latestDate + time + '00', 'YYYYMMDDHHmmss').valueOf(), 'code': code, 'name': name, 'price': price, 'amount': amount,
+                    'total': total, 'fee': 0
                 };
 
                 if (amount > 0) {
                     res.hold.push(hold);
-                    res.tradeDetail.push(record);
+                    res.tradeRecords.push(record);
                     res.cash -= total;
                 }
 
@@ -336,7 +368,21 @@ module.exports = {
                 // let preDate = Utils.preTradeDay(start);
                 let date = Utils.shortDayStr(start);
 
-                let avaiableCash = checkSellPosition(preData, date);
+                let sell = checkSellPosition(preData, date);
+
+                if (sell !== null) {
+                    preClose = sell.close;
+                    let open = sell.open;
+                    let close = sell.close;
+                    let high = sell.high;
+                    let low = sell.low;
+                    console.log(sell.cash);
+                    console.log(sell.hold);
+                    console.log(sell.marketValue);
+                    console.log(sell.tradeRecords);
+
+
+                }
 
                 // if (preData) {
                 //     console.log('==>preData:');
@@ -344,20 +390,40 @@ module.exports = {
                 // console.log('==>yestoday hold:');
                 // console.log(res[res.length - 1]);
                 // }
+                let avaiableCash = initCash;
+                let initHold = [];
+                let initTradeRecords = [];
+                // let cash = initCash;
 
-                let data = generateData(date, preClose, avaiableCash);
-                if (data !== null) {
-                    preClose = data.close;
-                    let open = data.open;
-                    let close = data.close;
-                    let high = data.high;
-                    let low = data.low;
-                    console.log(data.cash);
-                    console.log(data.hold);
-                    console.log(data.marketValue);
+                if (sell !== null) {
+                    avaiableCash = sell.cash;
+                    initHold = sell.hold;
+                    initTradeRecords = sell.tradeRecords;
+                } else if (preData !== null && preData.length > 0) {
+                    avaiableCash = preData[6];
+                    initHold = preData[8];
+                    // initTradeRecords = preData[9];
+                }
 
-                    preData = [start.valueOf(), open, high, low, close, 99999, data.cash, data.marketValue, data.hold, data.tradeDetail];
+                let buy = generateData(date, preClose, avaiableCash, initHold, initTradeRecords);
+
+                if (buy !== null) {
+                    preClose = buy.close;
+                    let open = buy.open;
+                    let close = buy.close;
+                    let high = buy.high;
+                    let low = buy.low;
+                    console.log(buy.cash);
+                    console.log(buy.hold);
+                    console.log(buy.marketValue);
+                    console.log(buy.tradeRecords);
+
+                    preData = [start.valueOf(), open, high, low, close, 99999, buy.cash, buy.marketValue, buy.hold, buy.tradeRecords];
                     res.push(JSON.parse(JSON.stringify(preData)));
+                } else if (sell !== null) {
+                    let item = [start.valueOf(), sell.open, sell.high, sell.low, close, 99999,
+                    sell.cash, sell.marketValue, sell.hold, sell.tradeRecords];
+                    res.push(item);
                 }
             }
             console.log('end get thsdayhot, used time:' + (moment().valueOf() - cur));
@@ -366,6 +432,8 @@ module.exports = {
                 console.log(e);
 
             })
+            console.log(res.length);
+
             response.data = res;
         } catch (err) {
             console.error(err);

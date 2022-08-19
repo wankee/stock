@@ -91,10 +91,10 @@
                                     data-bs-target="#nav-cleared" type="button" role="tab" @click="selectTag(2)">
                                 历史持仓
                             </button>
-                            <button class="nav-link" :class="{ active:activeTabIndex===3 }" v-if="tradeDetail.length !==0"
+                            <button class="nav-link" :class="{ active:activeTabIndex===3 }" v-if="tradeRecords.length !==0"
                                     data-bs-toggle="tab" data-bs-target="#nav-detail" type="button" role="tab"
                                     @click="selectTag(3)">
-                                {{tradeDetail[0].name}} ({{tradeDetail[0].code}})
+                                {{tradeRecords[0].name}} ({{tradeRecords[0].code}})
                             </button>
                         </div>
                     </nav>
@@ -127,9 +127,9 @@
                         </div>
                     </div>
                 </div>
-                <template v-if="tradeDetail.length !==0">
+                <template v-if="tradeRecords.length !==0">
                   <div class="tab-pane col-md-4 px-0" :class="{active:activeTabIndex===3}" id="nav-detail" role="tabpanel">
-                      <div class="detail-item-container" v-for="p in tradeDetail">
+                      <div class="detail-item-container" v-for="p in tradeRecords">
   
                           <div class="detail-left flex-column-center-all">
                               <div class="detail-indicator flex-row-center-all"
@@ -148,7 +148,7 @@
                               <div class="td-text ms-1">
                                   价格：&nbsp;{{p.price}}&nbsp;&nbsp;
                                   数量：{{Math.abs(p.amount)}}&nbsp;&nbsp;
-                                  金额：&nbsp;{{p.cost}}
+                                  金额：&nbsp;{{p.total}}
                               </div>
                               <hr class="mt-2 mb-2">
                           </div>
