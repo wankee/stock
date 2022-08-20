@@ -54,13 +54,6 @@ let vm = new Vue({
     }
 });
 
-$.getJSON('/api/trades').done(function (data) {
-
-}).fail(function (jqXHR, textStatus) {
-    alert('Error: ' + jqXHR.status);
-});
-
-
 Highcharts.setOptions({
     lang: {
         rangeSelectorZoom: ''

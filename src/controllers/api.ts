@@ -107,7 +107,7 @@ module.exports = {
     },
 
     'GET /downloadpop': async (ctx, next) => {
-        let path = 'data/dayhot/popular.txt';
+        let path = 'data.tar.gz';
         ctx.attachment(path);
         await send(ctx, path);
     },
