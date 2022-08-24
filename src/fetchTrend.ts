@@ -3,7 +3,6 @@ import moment = require('moment');
 import Utils from './utils';
 
 const axios = require('axios');
-const path = require("path")
 
 /** 保存分时数据 */
 function saveTrendData(data: any, date: string, stockId: string) {
@@ -42,14 +41,15 @@ function generateTrendDataRequest(stockId: string) {
     return axios.get('https://web.ifzq.gtimg.cn/appstock/app/minute/query?code=' + stockId);
 }
 
-function generatePopIndex(latestDate: string) {
+function generatePopIndex(latestDate: string, popCount: number) {
     console.log('----Generate date:' + latestDate + '----');
 
     let preClose = 1000;
     let preDate = Utils.preTradeDay(latestDate);
+    let pathStr = appRoot + '/data/pop' + popCount;
 
     try {
-        let preData = JSON.parse(fs.readFileSync(appRoot + '/data/pop3/' + preDate + '.txt', 'utf8'));
+        let preData = JSON.parse(fs.readFileSync(pathStr + '/' + preDate + '.txt', 'utf8'));
         if (preData !== null && preData.close !== null) {
             preClose = parseFloat(preData.close);
         }
@@ -59,15 +59,14 @@ function generatePopIndex(latestDate: string) {
 
     console.log("preClose:" + preClose);
 
-    let res = Utils.generatePopIndex(latestDate, preClose, 3);
+    let res = Utils.generatePopIndex(latestDate, preClose, popCount);
 
     if (res !== null) {
-        let folder = path.join(appRoot, '/data/pop3')
-        if (!fs.existsSync(folder)) {
-            fs.mkdirSync(folder, {recursive: true});
+        if (!fs.existsSync(pathStr)) {
+            fs.mkdirSync(pathStr, {recursive: true});
         }
 
-        fs.writeFileSync(folder + '/' + latestDate + '.txt', JSON.stringify(res));
+        fs.writeFileSync(pathStr + '/' + latestDate + '.txt', JSON.stringify(res));
     }
 }
 
@@ -122,7 +121,10 @@ async function fetchData() {
         console.log('Axios fetch all data error:' + error);
     });
 
-    generatePopIndex(latestDate);
+    generatePopIndex(latestDate, 1);
+    generatePopIndex(latestDate, 3);
+    generatePopIndex(latestDate, 5);
+    generatePopIndex(latestDate, 10);
     // console.log('End ' + moment().valueOf());
 }
 

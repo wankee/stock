@@ -8,7 +8,6 @@ import moment = require('moment');
 // const router = require('koa-router')();
 const send = require('koa-send');
 const axios = require('axios');
-const path = require("path")
 
 function getFundHistory() {
     return Fund.findAll({
