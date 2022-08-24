@@ -1,4 +1,4 @@
-import { Moment } from "moment";
+import {Moment} from "moment";
 import moment = require("moment");
 import fs = require('fs');
 import path = require("path")
@@ -18,7 +18,7 @@ export default class Utils {
 
     /**
      * 将string或者number转化成Moment
-     * @param date 
+     * @param date
      * @returns Moment
      */
     public static shortDay(date: string | number): Moment {
@@ -27,8 +27,8 @@ export default class Utils {
 
     /**
      * 将moment转化成string
-     * @param moment 
-     * @returns 
+     * @param moment
+     * @returns
      */
     public static shortDayStr(moment: Moment): string {
         return moment.format('YYYYMMDD');
@@ -157,7 +157,7 @@ export default class Utils {
         return JSON.parse(trendsData);
     }
 
-    public static generatePopIndex(latestDate: string, preClose: number) {
+    public static generatePopIndex(latestDate: string, preClose: number, popCount: number) {
         let preDate = Utils.preTradeDay(latestDate);
         console.log("Previous trade date:" + preDate + " preClose:" + preClose);
 
@@ -168,8 +168,7 @@ export default class Utils {
         }
         // console.log(stocks);
 
-        let max = 3;
-        let count = stocks.length >= max ? max : stocks.length;
+        let count = stocks.length >= popCount ? popCount : stocks.length;
 
         let res = {
             "date": latestDate, "preClose": preClose, "open": 0, "high": 0, "low": 0, "close": 0,
@@ -182,7 +181,7 @@ export default class Utils {
             console.log(stock);
 
             let fileName = path.join(appRoot, '/fetched/trend/', stock[1], '/', latestDate + '.txt');
-            console.log(fileName);
+            // console.log(fileName);
 
             // console.log('before read==>' + moment().valueOf());
             let trendsData;
@@ -195,24 +194,24 @@ export default class Utils {
             }
             // console.log('after read==>' + moment().valueOf());
 
-            console.log('=====>' + stock[1] + ' ' + latestDate);
+            // console.log('=====>' + stock[1] + ' ' + latestDate);
 
             let code = Utils.getCode(stock[1]);
             let obj = JSON.parse(trendsData).data[code];
             let treObj = obj.data.data;
 
-            console.log('Trend size:' + treObj.length);
+            // console.log('Trend size:' + treObj.length);
             if (treObj.length !== 242 && treObj.length !== 267) {
                 console.log(trendsData);
             }
 
             let info = obj.qt[code];
-            console.log(info[0] + ' ' + info[1] + ' ' + info[2]
-                + ' ' + info[3] + ' ' + info[4] + ' ' + info[5]);
+            console.log(latestDate + ' ' + info[1] + ' ' + info[2]
+                + ' close:' + info[3] + ' preClose:' + info[4] + ' open:' + info[5]);
 
+            let close = info[3]
             let preClose = info[4];
             let open = info[5];
-            let close = info[3]
             let openPercent = 0;
             let closePercent = 0;
 

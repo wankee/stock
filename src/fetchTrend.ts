@@ -1,6 +1,7 @@
 import fs = require('fs');
 import moment = require('moment');
 import Utils from './utils';
+
 const axios = require('axios');
 const path = require("path")
 
@@ -8,7 +9,7 @@ const path = require("path")
 function saveTrendData(data: any, date: string, stockId: string) {
     let folder = appRoot + '/fetched/trend/' + stockId;
     if (!fs.existsSync(folder)) {
-        fs.mkdirSync(folder, { recursive: true });
+        fs.mkdirSync(folder, {recursive: true});
     }
 
     fs.writeFileSync(folder + '/' + date + '.txt', JSON.stringify(data));
@@ -22,7 +23,7 @@ function fetchHistoryTrend(date: string, stockId: string) {
     param.append('c', 'StockL2History');
 
     axios.post('https://apphis.longhuvip.com/w1/api/index.php', param, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).then(response => {
         if (response.status === 200 && response.data !== null) {
             // console.log('Response:' + response.data.code);
@@ -58,12 +59,12 @@ function generatePopIndex(latestDate: string) {
 
     console.log("preClose:" + preClose);
 
-    let res = Utils.generatePopIndex(latestDate, preClose);
+    let res = Utils.generatePopIndex(latestDate, preClose, 3);
 
     if (res !== null) {
         let folder = path.join(appRoot, '/data/pop3')
         if (!fs.existsSync(folder)) {
-            fs.mkdirSync(folder, { recursive: true });
+            fs.mkdirSync(folder, {recursive: true});
         }
 
         fs.writeFileSync(folder + '/' + latestDate + '.txt', JSON.stringify(res));
@@ -126,6 +127,7 @@ async function fetchData() {
 }
 
 let timer = null;
+
 function timeTick() {
     let now = moment();
     console.log(now);

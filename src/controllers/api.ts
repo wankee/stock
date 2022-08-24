@@ -23,6 +23,7 @@ function getTrades() {
         order: [['date', 'DESC']]
     });
 }
+
 function getTrade(id) {
     return Trade.findAll({
         where: {
@@ -30,6 +31,7 @@ function getTrade(id) {
         }
     });
 }
+
 function createTrade(trade) {
     return Trade.create({
         date: trade.date,
@@ -48,6 +50,7 @@ function createTrade(trade) {
         balance: trade.balance,
     });
 }
+
 function deleteTrade(id) {
     return Trade.destroy({
         where: {
@@ -115,33 +118,61 @@ module.exports = {
     'GET /api/thsdayhot': async (ctx, next) => {
         console.log(ctx.query.pop);
         console.log(ctx.querystring);
-
-        let response = { "code": 0, "message": "success", "data": {} };
+        let count = ctx.query.pop;
+        let response = {"code": 0, "message": "success", "data": {}};
         try {
             let res = new Array();
 
             let cur = moment().valueOf();
             console.log('before get thsdayhot:' + cur);
-            fs.readdirSync(appRoot + '/data/pop3')
-                .filter((f: string) => {
-                    return f.endsWith('.txt');
-                })
-                .forEach((f: string) => {
-                    // console.log('file:' + f);
-                    let data = JSON.parse(fs.readFileSync(appRoot + '/data/pop3/' + f, 'utf8'));
-                    let open = data.open;
-                    let close = data.close;
-                    let high = data.high;
-                    let low = data.low;
-                    let item = [Utils.shortDay(data.date).hour(15).valueOf(), open, high, low, close, 100000];
-                    res.push(item);
-                });
+
+            let path = appRoot + '/data/pop' + count;
+
+            if (!fs.existsSync(path)) {
+                fs.mkdirSync(path, {recursive: true});
+
+                let now = moment();
+                let preClose = 1000;
+                for (let start = Utils.shortDay('20220801').hour(15); !start.isAfter(now, 'day'); start.add(1, 'days')) {
+                    // console.log(start);
+                    let dayStr = Utils.shortDayStr(start);
+                    console.log('----Generate date:' + dayStr + '----');
+
+                    let data = Utils.generatePopIndex(dayStr, preClose, count);
+                    if (data !== null) {
+                        preClose = data.close;
+                        let open = data.open;
+                        let close = data.close;
+                        let high = data.high;
+                        let low = data.low;
+                        let item = [start.valueOf(), open, high, low, close, 100000];
+                        res.push(item);
+                        fs.writeFileSync(path + '/' + dayStr + '.txt', JSON.stringify(data));
+                    }
+                }
+            } else {
+                fs.readdirSync(path)
+                    .filter((f: string) => {
+                        return f.endsWith('.txt');
+                    })
+                    .forEach((f: string) => {
+                        // console.log('file:' + f);
+                        let data = JSON.parse(fs.readFileSync(path + '/' + f, 'utf8'));
+                        let open = data.open;
+                        let close = data.close;
+                        let high = data.high;
+                        let low = data.low;
+                        let item = [Utils.shortDay(data.date).hour(15).valueOf(), open, high, low, close, 100000];
+                        res.push(item);
+                    });
+            }
+
             console.log('end get thsdayhot, used time:' + (moment().valueOf() - cur));
 
             response.data = res;
         } catch (err) {
             console.error(err);
-        };
+        }
 
         ctx.rest(
             response
