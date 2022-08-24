@@ -119,6 +119,7 @@ module.exports = {
         console.log(ctx.query.pop);
         console.log(ctx.querystring);
         let count = ctx.query.pop;
+        if (isNaN(count)) count = 3;
         let response = {"code": 0, "message": "success", "data": {}};
         try {
             let res = new Array();
